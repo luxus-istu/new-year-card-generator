@@ -15,19 +15,16 @@
   ],
   "routes": [
     {
-      "src": "/templates/(.*)",
-      "dest": "/templates/$1"
+      "src": "/api/(.*)",
+      "dest": "/dist/server/server.js"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/templates/(.*)",
+      "dest": "/dist/server/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/server/server.js"
+      "dest": "/dist/client/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
