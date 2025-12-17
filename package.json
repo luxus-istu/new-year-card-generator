@@ -6,7 +6,7 @@
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "tsx --watch src/server/server.ts",
     "client:dev": "vite --host",
-    "build": "vite build && tsc",
+    "build": "vite build && tsc && cp -r templates dist/templates",
     "start": "NODE_ENV=production node dist/server/server.js"
   },
   "devDependencies": {
