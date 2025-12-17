@@ -42,4 +42,11 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(clientPath));
 }
 
+if (process.env.NODE_ENV === 'development') {
+  app.listen(3000, () => {
+    console.log(`🚀 Сервер запущен на http://localhost:3000`);
+  });
+}
+
+
 export default app;
