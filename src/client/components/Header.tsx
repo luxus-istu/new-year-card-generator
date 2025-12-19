@@ -1,38 +1,23 @@
 import React from 'react';
-import '../index.css';
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="left">
         <div className="title">
           <img src="src/client/img/snow.png" alt="Snezhinka" className="header_img" />
-          <span className="header_name">FrostyCreations</span>
+          <p className="header_name">FrostyCreations</p>
         </div>
-        <h1 className="main_text">
-          Дарите людям новогоднее настроение через онлайн открытки!
-        </h1>
+        <h1 className="main_text">Дарите людям новогоднее настроение через онлайн открытки!</h1>
         <div className="not_img">
-          <img src="src/client/img/switch.png" alt="Switch" className="switch" />
-          <img
-            src="/img/another_snow.png"
-            alt="Snow Big"
-            className="header_snow_big"
-          />
-          <img
-            src="/img/another_snow.png"
-            alt="Snow Medium"
-            className="header_snow_medium"
-          />
-          <img
-            src="/img/another_snow.png"
-            alt="Snow Small"
-            className="header_snow_small"
-          />
+          <img src="src/client/img/switch.png" className="switch" alt="Switch" />
+          <img src="src/client/img/another_snow.png" className="header_snow_big" alt="Snowflake" />
+          <img src="src/client/img/another_snow.png" className="header_snow_medium" alt="Snowflake" />
+          <img src="src/client/img/another_snow.png" className="header_snow_small" alt="Snowflake" />
         </div>
       </div>
       <div className="right">
-        <img src="/img/header_img.png" alt="Main visual" className="main_img" />
+        <img src="src/client/img/header_img.png" className="main_img" alt="Main header" />
       </div>
     </header>
   );
