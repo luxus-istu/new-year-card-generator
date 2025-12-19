@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import TemplateGrid from './components/TemplateGrid'
 import CardPreview from './components/CardPreview'
 import { Template } from '../types/index'
+import Header from './components/Header'
 
 export default function App() {
   const [templates, setTemplates] = useState<Template[]>([])
@@ -149,73 +150,78 @@ export default function App() {
   }
 
   return (
-    <div className="app">
-      <div className="container">
-        <h1>🎉 Создать поздравительную открытку</h1>
-
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Выберите шаблон:</label>
-            <TemplateGrid
-              templates={templates}
-              onSelect={handleTemplateSelect}
-              selectedTemplate={selectedTemplate}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Инициалы (ФИО):</label>
-            <input
-              type="text"
-              value={initials}
-              onChange={(e) => setInitials(e.target.value)}
-              placeholder="А.Б.В."
-              maxLength={10}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Имя получателя:</label>
-            <input
-              type="text"
-              value={recipient}
-              onChange={(e) => setRecipient(e.target.value)}
-              placeholder="Иван Иванов"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Email получателя:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="ivan@example.com"
-              required
-            />
-          </div>
-
-          <button type="submit" disabled={!selectedTemplate}>
-            Создать и отправить открытку
-          </button>
-        </form>
-
-        {previewVisible && selectedTemplate && (
-          <CardPreview
-            template={selectedTemplate}
-            initials={initials.toUpperCase()}
-            recipient={recipient}
-          />
-        )}
-
-        {status && (
-          <div className={`status ${status.includes('✅') ? 'success' : 'error'}`}>
-            {status}
-          </div>
-        )}
-      </div>
+    <div className="App">
+      <Header />
     </div>
-  )
+  );
+  // return (
+  //   <div className="app">
+  //     <div className="container">
+  //       <h1>🎉 Создать поздравительную открытку</h1>
+
+  //       <form onSubmit={handleSubmit}>
+  //         <div className="form-group">
+  //           <label>Выберите шаблон:</label>
+  //           <TemplateGrid
+  //             templates={templates}
+  //             onSelect={handleTemplateSelect}
+  //             selectedTemplate={selectedTemplate}
+  //           />
+  //         </div>
+
+  //         <div className="form-group">
+  //           <label>Инициалы (ФИО):</label>
+  //           <input
+  //             type="text"
+  //             value={initials}
+  //             onChange={(e) => setInitials(e.target.value)}
+  //             placeholder="А.Б.В."
+  //             maxLength={10}
+  //             required
+  //           />
+  //         </div>
+
+  //         <div className="form-group">
+  //           <label>Имя получателя:</label>
+  //           <input
+  //             type="text"
+  //             value={recipient}
+  //             onChange={(e) => setRecipient(e.target.value)}
+  //             placeholder="Иван Иванов"
+  //             required
+  //           />
+  //         </div>
+
+  //         <div className="form-group">
+  //           <label>Email получателя:</label>
+  //           <input
+  //             type="email"
+  //             value={email}
+  //             onChange={(e) => setEmail(e.target.value)}
+  //             placeholder="ivan@example.com"
+  //             required
+  //           />
+  //         </div>
+
+  //         <button type="submit" disabled={!selectedTemplate}>
+  //           Создать и отправить открытку
+  //         </button>
+  //       </form>
+
+  //       {previewVisible && selectedTemplate && (
+  //         <CardPreview
+  //           template={selectedTemplate}
+  //           initials={initials.toUpperCase()}
+  //           recipient={recipient}
+  //         />
+  //       )}
+
+  //       {status && (
+  //         <div className={`status ${status.includes('✅') ? 'success' : 'error'}`}>
+  //           {status}
+  //         </div>
+  //       )}
+  //     </div>
+  //   </div>
+  // )
 }

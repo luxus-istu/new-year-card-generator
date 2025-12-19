@@ -151,3 +151,85 @@ button:disabled {
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
+
+
+@font-face {
+  font-family: "KuraleRegular"; 
+  src: url('fonts/Kurale-Regular.ttf') 
+} 
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background: #D1132F;
+  display: flex;
+  justify-content: space-between;
+  height: 960px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  margin-top: 26px;
+  margin-left: 90px;
+}
+
+.header_img {
+  height: 78px;
+  width: 78px;
+}
+
+.header_name {
+  font-family: KuraleRegular;
+  font-size: 48px;
+  color: #FDFFF6;
+  margin-left: 14px;
+}
+
+.main_text {
+  font-family: KuraleRegular;
+  font-size: 92px;
+  color: #FDFFF6;
+  margin-top: 92px;
+  margin-left: 90px;
+  width: 1000px;
+}
+
+.right {
+  position: absolute;
+  right: 0;
+  background: linear-gradient(to left, rgba(8, 0, 0, 0.4), transparent);
+}
+
+.not_img {
+  margin-top: 50px;
+  margin-left: 90px;
+  width: 350px;
+  height: 110px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch {
+  width: 110px;
+  height: 110px;
+}
+
+.header_snow_big {
+  width: 68px;
+  height: 68px;
+}
+
+.header_snow_medium {
+  width: 48px;
+  height: 48px;
+}
+
+.header_snow_small {
+  width: 38px;
+  height: 38px;
+}
