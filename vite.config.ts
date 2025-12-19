@@ -7,12 +7,13 @@ export default defineConfig({
   root: '.',
   build: {
     outDir: 'dist/client',
-    emptyOutDir: true
+    emptyOutDir: true,
+    sourcemap: false
   },
   server: {
     port: 5173,
     proxy: {
-      '/api': { target: 'http://localhost:3001', changeOrigin: true }
+      '/api': { target: 'http://localhost:3000', changeOrigin: true }
     }
   },
   resolve: {
