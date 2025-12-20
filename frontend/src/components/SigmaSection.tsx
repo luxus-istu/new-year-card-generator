@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'; // useCallback не использовался, поэтому я его удалил
+import { useState, useEffect } from 'react';
 import Slider from './Slider';
 import CardForm from './CardForm';
-import { TemplateMeta } from '../../types';
+import type { TemplateMeta } from '@new-year-card-generator/shared';
 
 export default function SigmaSection() {
   const [cardImages, setCardImages] = useState<TemplateMeta[]>([]);

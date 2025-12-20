@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Template } from '../../types'
+import type { Template } from '@new-year-card-generator/shared'
 
 type Props = {
   template: Template

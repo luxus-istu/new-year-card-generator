@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { IndicatorPosition } from '../../types/client';
-import { TemplateMeta } from '../../types';
+import type { TemplateMeta, IndicatorPosition } from '@new-year-card-generator/shared';
 
 type ImagesProps = {
   templates: TemplateMeta[]

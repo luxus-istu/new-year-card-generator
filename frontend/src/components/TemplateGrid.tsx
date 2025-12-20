@@ -1,5 +1,5 @@
 import React from 'react'
-import { Template } from '../../types'
+import { Template } from '../../../shared/src/types'
 
 type Props = {
   templates: Template[]
