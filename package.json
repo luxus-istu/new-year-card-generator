@@ -1,32 +1,21 @@
 {
   "name": "new-year-card-generator",
+  "private": true,
   "type": "module",
-  "main": "src/index.ts",
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "NODE_ENV=development tsx watch src/server/server.ts",
-    "dev:client": "vite",
-    "build": "vite build && tsc && cp -r templates dist/templates",
-    "start": "NODE_ENV=production node dist/server/server.js"
+    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend && npm install --prefix shared",
+    "build:shared": "npm run build --prefix shared",
+    "dev": "npm run build:shared && concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix shared && npm run build --prefix backend && npm run build --prefix frontend",
+    "start": "NODE_ENV=production node dist/server/server.js",
+    "start:dev": "NODE_ENV=development node dist/server/server.js"
   },
   "devDependencies": {
-    "@types/cors": "2.8.19",
-    "@types/express": "5.0.6",
-    "@types/node": "25.0.3",
-    "@types/nodemailer": "^7.0.4",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2",
-    "concurrently": "^9.2.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "tsx": "4.21.0",
-    "typescript": "5.9.3",
-    "vite": "^7.3.0"
+    "concurrently": "9.2.1"
   },
   "dependencies": {
     "cors": "2.8.5",
     "express": "5.2.1",
-    "nodemailer": "^7.0.11"
+    "nodemailer": "7.0.11"
   }
 }

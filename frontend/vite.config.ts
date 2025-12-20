@@ -6,19 +6,20 @@ export default defineConfig({
   plugins: [react()],
   root: '.',
   build: {
-    outDir: 'dist/client',
+    outDir: '../dist/client',
     emptyOutDir: true,
     sourcemap: false
   },
   server: {
     port: 5173,
     proxy: {
-      '/api': { target: 'http://localhost:3000', changeOrigin: true }
+      '/api': { target: 'http://localhost:3000', changeOrigin: true },
+      '/template': { target: 'http://localhost:3000', changeOrigin: true }
     }
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src/client')
+      '@shared': path.resolve(__dirname, '../shared')
     }
   }
 })

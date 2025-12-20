@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import TemplateGrid from './components/TemplateGrid'
 import CardPreview from './components/CardPreview'
-import { Template } from '../types/index'
+import { Template } from '../../shared/src/types'
 
 export default function App() {
   const [templates, setTemplates] = useState<Template[]>([])
@@ -32,48 +32,48 @@ export default function App() {
     setPreviewVisible(true)
   }
 
-  const generatePreview = useCallback(() => {
-    if (!selectedTemplate || !initials.trim()) return null
+  // const generatePreview = useCallback(() => {
+  //   if (!selectedTemplate || !initials.trim()) return null
 
-    // Создаем canvas для предпросмотра
-    const canvas = document.createElement('canvas')
-    canvas.width = 400
-    canvas.height = 600
-    const ctx = canvas.getContext('2d')
+  //   // Создаем canvas для предпросмотра
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = 400
+  //   canvas.height = 600
+  //   const ctx = canvas.getContext('2d')
 
-    if (!ctx) return null
+  //   if (!ctx) return null
 
-    // Загружаем изображение шаблона
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, 400, 600)
+  //   // Загружаем изображение шаблона
+  //   const img = new Image()
+  //   img.crossOrigin = 'anonymous'
+  //   img.onload = () => {
+  //     ctx.drawImage(img, 0, 0, 400, 600)
 
-      // Инициалы
-      ctx.font = selectedTemplate.initialsFontSize
-      ctx.fillStyle = selectedTemplate.initialsColor
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.shadowColor = 'rgba(0,0,0,0.5)'
-      ctx.shadowBlur = 8
-      ctx.fillText(initials.toUpperCase(),
-        selectedTemplate.initialsX * 400 / 1920,
-        selectedTemplate.initialsY * 600 / 1080
-      )
+  //     // Инициалы
+  //     ctx.font = selectedTemplate.initialsFontSize
+  //     ctx.fillStyle = selectedTemplate.initialsColor
+  //     ctx.textAlign = 'center'
+  //     ctx.textBaseline = 'middle'
+  //     ctx.shadowColor = 'rgba(0,0,0,0.5)'
+  //     ctx.shadowBlur = 8
+  //     ctx.fillText(initials.toUpperCase(),
+  //       selectedTemplate.initialsX * 400 / 1920,
+  //       selectedTemplate.initialsY * 600 / 1080
+  //     )
 
-      // Имя
-      ctx.shadowBlur = 4
-      ctx.font = selectedTemplate.recipientFontSize
-      ctx.fillStyle = selectedTemplate.recipientColor
-      ctx.fillText(recipient || 'Имя',
-        selectedTemplate.recipientX * 400 / 1920,
-        selectedTemplate.recipientY * 600 / 1080
-      )
+  //     // Имя
+  //     ctx.shadowBlur = 4
+  //     ctx.font = selectedTemplate.recipientFontSize
+  //     ctx.fillStyle = selectedTemplate.recipientColor
+  //     ctx.fillText(recipient || 'Имя',
+  //       selectedTemplate.recipientX * 400 / 1920,
+  //       selectedTemplate.recipientY * 600 / 1080
+  //     )
 
-      setPreviewVisible(true)
-    }
-    img.src = selectedTemplate.fullImage
-  }, [selectedTemplate, initials, recipient])
+  //     setPreviewVisible(true)
+  //   }
+  //   img.src = selectedTemplate.fullImage
+  // }, [selectedTemplate, initials, recipient])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

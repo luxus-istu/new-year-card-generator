@@ -1,6 +1,6 @@
-import fs from 'fs/promises';
-import path from 'path';
-import type { Template, TemplateMeta } from '../types';
+import path from "path"
+import fs from "fs/promises"
+import type { Template, TemplateMeta } from '@new-year-card-generator/shared';
 
 export async function getCardTemplates(): Promise<Template[]> {
   const templatesDir = path.join(process.cwd(), 'templates');

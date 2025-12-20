@@ -43,6 +43,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 if (process.env.NODE_ENV === 'development') {
+  const clientPath = path.join(process.cwd(), 'dist/client');
+  console.log('📁 Client path:', clientPath);
+
+  app.use(express.static(clientPath));
   app.listen(3000, () => {
     console.log(`🚀 Сервер запущен на http://localhost:3000`);
   });
