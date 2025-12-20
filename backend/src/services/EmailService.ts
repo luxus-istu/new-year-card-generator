@@ -1,5 +1,5 @@
 import { Transporter, createTransport } from 'nodemailer';
-import type { EmailData, EmailServiceConfig, SendEmailResult, SendMailOptions } from '../../types/email';
+import type { EmailData, EmailServiceConfig, SendEmailResult, SendMailOptions } from '@new-year-card-generator/shared';
 
 export class EmailService {
   private config: EmailServiceConfig;

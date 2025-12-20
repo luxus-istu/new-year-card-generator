@@ -1,4 +1,4 @@
-import { EmailService } from './services/EmailService';
+import { EmailService } from "./services/EmailService.js";
 
 const config = {
   host: process.env.SMTP_HOST!,

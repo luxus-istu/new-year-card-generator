@@ -1,0 +1,12 @@
+{
+  "name": "Золотой Новый год",
+  "image": "ai_slop.png",
+  "initialsX": 200,
+  "initialsY": 250,
+  "initialsFontSize": "90px",
+  "initialsColor": "#ffd700",
+  "recipientX": 200,
+  "recipientY": 450,
+  "recipientFontSize": "32px",
+  "recipientColor": "white"
+}
