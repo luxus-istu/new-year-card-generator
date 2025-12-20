@@ -1,36 +1,34 @@
-import React, {useState, useCallback} from 'react';
-import Slider from './slider';
+import React, { useState, useEffect } from 'react'; // useCallback не использовался, поэтому я его удалил
+import Slider from './Slider';
 import CardForm from './CardForm';
 import { TemplateMeta } from '../../types';
 
-const SigmaSection: React.FC = () => {
-  // Массив изображений для слайдера
-  // const cardImages = [
-  //   'img/rebenok_s_ognem.png',
-  //   'img/card2.png',
-  //   'img/card3.png',
-  //   'img/card4.png',
-  //   'img/card5.png',
-  //   'img/card6.png',
-  //   'img/card7.png',
-  //   'img/card8.png',
-  //   'img/card1.png'
-  // ];
-  //спасите
-  // Или можно получать из API
+export default function SigmaSection() {
   const [cardImages, setCardImages] = useState<TemplateMeta[]>([]);
-  React.useEffect(() => {
-    fetchTemplates()
-  }, [])
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchTemplates = useCallback(async () => {
-    try {
-      const response = await fetch('/api/templates')
-      const data = await response.json()
-      setCardImages(data)
-    } catch (error) {
-      console.error(error)
-    }
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+
+    fetch('/api/templates')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Ошибка сети: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCardImages(data as TemplateMeta[]);
+      })
+      .catch((error) => {
+        console.error("Не удалось загрузить шаблоны:", error);
+        setError("Не удалось загрузить шаблоны. Пожалуйста, попробуйте позже.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -41,12 +39,21 @@ const SigmaSection: React.FC = () => {
         <img src="src/client/img/list1.png" alt="list" className="list1" />
       </div>
       <h1 className="open_title">Выберите открытку:</h1>
-      <div className="sigma_items">
-        <Slider templates={cardImages} />
-        <CardForm />
-      </div>
+
+      {isLoading && <div className="loading-message">Загрузка...</div>}
+
+      {error && (
+        <div className="error-message" style={{ color: 'red', textAlign: 'center', padding: '10px' }}>
+          {error}
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <div className="sigma_items">
+          <Slider templates={cardImages} />
+          <CardForm />
+        </div>
+      )}
     </section>
   );
 };
-
-export default SigmaSection;

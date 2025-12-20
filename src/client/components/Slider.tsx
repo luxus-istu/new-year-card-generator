@@ -1,29 +1,22 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { IndicatorPosition} from '../../types/client';
+import React, { useState, useRef, useCallback } from 'react';
+import { IndicatorPosition } from '../../types/client';
 import { TemplateMeta } from '../../types';
 
-interface ImagesProps {
+type ImagesProps = {
   templates: TemplateMeta[]
 }
 
-const Slider: React.FC<ImagesProps> = ({templates}) => {
+const Slider: React.FC<ImagesProps> = ({ templates }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const slidesContainerRef = useRef<HTMLDivElement>(null);
   const centerIndicatorRef = useRef<HTMLDivElement>(null);
-  
-  const totalSlides: number = templates.length;
 
-  // Добавим проверку на пустой массив
-  useEffect(() => {
-    if (templates.length === 0) {
-      console.warn('Slider: templates array is empty');
-    }
-  }, [templates]);
+  const totalSlides: number = templates.length;
 
   const goToSlide = useCallback((index: number): void => {
     if (isAnimating || templates.length === 0) return;
-    
+
     // Зацикливание
     let newIndex = index;
     if (index < 0) {
@@ -57,22 +50,10 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
     }, 500);
   }, [isAnimating, totalSlides, templates.length]);
 
-  // Обработка клавиатуры
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      if (isAnimating || templates.length === 0) return;
-      if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
-      if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, isAnimating, goToSlide, templates.length]);
-
   // Показываем/скрываем индикаторы
   const shouldShowIndicator = (position: IndicatorPosition): boolean => {
     if (templates.length <= 1) return false;
-    
+
     switch (position) {
       case 'extra-far-left':
         return currentIndex >= 3;
@@ -91,26 +72,6 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
       default:
         return false;
     }
-  };
-
-  const indicatorPositions: IndicatorPosition[] = [
-    'extra-far-left',
-    'far-left',
-    'near-left',
-    'center',
-    'near-right',
-    'far-right',
-    'extra-far-right'
-  ];
-
-  const offsetMap: Record<IndicatorPosition, number> = {
-    'extra-far-left': -3,
-    'far-left': -2,
-    'near-left': -1,
-    'center': 0,
-    'near-right': 1,
-    'far-right': 2,
-    'extra-far-right': 3
   };
 
   // Если нет изображений, показываем заглушку
@@ -135,8 +96,8 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
   return (
     <div className="open">
       <div className="slider-container">
-        <button 
-          className="slider-btn prev-btn" 
+        <button
+          className="slider-btn prev-btn"
           aria-label="Предыдущий слайд"
           onClick={() => goToSlide(currentIndex - 1)}
           disabled={isAnimating || templates.length <= 1}
@@ -147,29 +108,27 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
         <div className="slider">
           <div className="slides" ref={slidesContainerRef}>
             {templates.map((image, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`slide ${index === currentIndex ? 'active' : ''}`}
               >
-                <img 
-                  src={image.preview} 
-                  className="slider_img" 
-                  alt={`Открытка ${index + 1}`}
+                <img
+                  src={image.preview}
+                  className="slider_img"
+                  alt={`Открытка: ${image.name}`}
                   onError={(e) => {
-                    // Обработка ошибок загрузки изображений
                     const target = e.target as HTMLImageElement;
-                    target.src = 'src/client/img/placeholder.png'; // Запасное изображение
-                    target.alt = `Не удалось загрузить изображение ${index + 1}`;
+                    // TODO: request placeholder image with origal image size
+                    target.src = `https://placehold.co/600`;
+                    console.error(`Не удалось загрузить изображение: ${image.name}`)
                   }}
                 />
               </div>
             ))}
           </div>
-          
-          {/* Вернули индикаторы из HTML */}
+
           <div className="indicators">
-            {/* Новые самые дальние */}
-            <div 
+            <div
               className={`indicator-item extra-far-left ${shouldShowIndicator('extra-far-left') ? '' : 'hidden'}`}
               onClick={() => goToSlide(currentIndex - 3)}
             >
@@ -177,8 +136,8 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
                 <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
-            
-            <div 
+
+            <div
               className={`indicator-item far-left ${shouldShowIndicator('far-left') ? '' : 'hidden'}`}
               onClick={() => goToSlide(currentIndex - 2)}
             >
@@ -186,8 +145,8 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
                 <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
-            
-            <div 
+
+            <div
               className={`indicator-item near-left ${shouldShowIndicator('near-left') ? '' : 'hidden'}`}
               onClick={() => goToSlide(currentIndex - 1)}
             >
@@ -196,7 +155,7 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
               </div>
             </div>
 
-            <div 
+            <div
               ref={centerIndicatorRef}
               className="indicator-item center"
               onClick={() => goToSlide(currentIndex)}
@@ -206,7 +165,7 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
               </div>
             </div>
 
-            <div 
+            <div
               className={`indicator-item near-right ${shouldShowIndicator('near-right') ? '' : 'hidden'}`}
               onClick={() => goToSlide(currentIndex + 1)}
             >
@@ -215,7 +174,7 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
               </div>
             </div>
 
-            <div 
+            <div
               className={`indicator-item far-right ${shouldShowIndicator('far-right') ? '' : 'hidden'}`}
               onClick={() => goToSlide(currentIndex + 2)}
             >
@@ -224,8 +183,7 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
               </div>
             </div>
 
-            {/* Новые самые дальние */}
-            <div 
+            <div
               className={`indicator-item extra-far-right ${shouldShowIndicator('extra-far-right') ? '' : 'hidden'}`}
               onClick={() => goToSlide(currentIndex + 3)}
             >
@@ -235,9 +193,9 @@ const Slider: React.FC<ImagesProps> = ({templates}) => {
             </div>
           </div>
         </div>
-        
-        <button 
-          className="slider-btn next-btn" 
+
+        <button
+          className="slider-btn next-btn"
           aria-label="Следующий слайд"
           onClick={() => goToSlide(currentIndex + 1)}
           disabled={isAnimating || templates.length <= 1}

@@ -1,6 +1,4 @@
-import React from 'react';
-
-const Header: React.FC = () => {
+export default function Header() {
   return (
     <header className="header">
       <div className="left">
@@ -22,5 +20,3 @@ const Header: React.FC = () => {
     </header>
   );
 };
-
-export default Header;

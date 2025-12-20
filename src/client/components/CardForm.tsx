@@ -1,7 +1,7 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { FormData } from '../../types/client';
 
-const CardForm: React.FC = () => {
+export default function CardForm() {
   const [formData, setFormData] = useState<FormData>({
     senderName: '',
     recipientName: '',
@@ -20,9 +20,23 @@ const CardForm: React.FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Здесь будет логика отправки формы
-    alert('Открытка отправлена!');
-    // Сброс формы
+    // TODO: Make POST requst to server for sending card generated
+    /* Example
+    fetch('/api/send-card', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        initials, // string
+        recipient, // string
+        templateId: selectedTemplate.name, // string
+        cardImage // base64 image encoded from canvas
+        imageType // "image/jpeg" || "image/png"
+        email, // string
+        })
+      })
+      .catch((e) => // set error status for user)
+      .finally(() => // set ok status for user)
+    */
     setFormData({
       senderName: '',
       recipientName: '',
@@ -89,5 +103,3 @@ const CardForm: React.FC = () => {
     </form>
   );
 };
-
-export default CardForm;
