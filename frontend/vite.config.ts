@@ -8,7 +8,7 @@ export default defineConfig({
   build: {
     outDir: '../dist/client',
     emptyOutDir: true,
-    sourcemap: false
+    sourcemap: true
   },
   server: {
     port: 5173,

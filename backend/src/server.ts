@@ -37,9 +37,13 @@ app.post('/api/send-card', async (req, res) => {
 
 if (process.env.NODE_ENV === 'production') {
   const clientPath = path.join(process.cwd(), 'dist/client');
-  console.log('📁 Client path:', clientPath);
+  console.log('📁 Serving static files from:', clientPath);
 
   app.use(express.static(clientPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientPath, 'index.html'));
+  });
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -48,9 +52,8 @@ if (process.env.NODE_ENV === 'development') {
 
   app.use(express.static(clientPath));
   app.listen(3000, () => {
-    console.log(`🚀 Сервер запущен на http://localhost:3000`);
+    console.log(`🚀 Dev server запущен на http://localhost:3000`);
   });
 }
-
 
 export default app;
