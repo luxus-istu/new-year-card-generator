@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { Template } from '@/app/types'
 
-interface Props {
+type Props = {
   template: Template
   initials: string
   recipient: string
 }
 
-const CardPreview: React.FC<Props> = ({ template, initials, recipient }) => {
+export default function CardPreview({ template, initials, recipient }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const CardPreview: React.FC<Props> = ({ template, initials, recipient }) => {
     img.crossOrigin = 'anonymous'
     img.onload = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.drawImage(img, 0, 0, 400, 600)
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
       // Инициалы
       ctx.font = template.initialsFontSize
@@ -54,5 +54,3 @@ const CardPreview: React.FC<Props> = ({ template, initials, recipient }) => {
     </div>
   )
 }
-
-export default CardPreview
