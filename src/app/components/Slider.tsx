@@ -1,11 +1,15 @@
-import React, { useState, useRef, useCallback } from 'react';
-import type { TemplateMeta, IndicatorPosition } from '@/app/types';
+import { useState, useRef, useCallback } from 'react';
+import type { IndicatorPosition, Template } from '@/app/types';
 
 type ImagesProps = {
-  templates: TemplateMeta[]
+  templates: Template[]
 }
 
-export default function Slider({ templates }: ImagesProps) {
+interface SliderProps extends ImagesProps {
+  onSlideChange: (template: Template) => void;
+}
+
+export default function Slider({ templates, onSlideChange }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const slidesContainerRef = useRef<HTMLDivElement>(null);
@@ -26,6 +30,7 @@ export default function Slider({ templates }: ImagesProps) {
 
     setIsAnimating(true);
     setCurrentIndex(newIndex);
+    onSlideChange(templates[newIndex])
 
     // Скроллим
     if (slidesContainerRef.current) {
@@ -112,7 +117,7 @@ export default function Slider({ templates }: ImagesProps) {
                 className={`slide ${index === currentIndex ? 'active' : ''}`}
               >
                 <img
-                  src={image.preview}
+                  src={image.url}
                   className="slider_img"
                   alt={`Открытка: ${image.name}`}
                   onError={(e) => {

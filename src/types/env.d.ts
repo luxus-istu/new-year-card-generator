@@ -6,6 +6,7 @@ declare global {
       SMTP_SECURE: string;
       SMTP_USER: string;
       SMTP_PASS: string;
+      NEXT_PUBLIC_SMTP_DEFAULT_TO: string;
     }
   }
 }

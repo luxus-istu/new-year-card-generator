@@ -79,10 +79,13 @@ export class EmailService {
       `,
       attachments: [
         {
-          path: options.cardImage,
-          cid: 'greeting-card',
+          filename: 'greeting-card.png',   // имя файла, которое увидит получатель
+          content: options.cardImage,      // Buffer напрямую
+          cid: 'greeting-card',            // уникальный cid для встраивания
+          contentType: 'image/png',        // явно указываем тип
+          contentDisposition: 'inline' as const, // важно для встроенных изображений
         }
-      ]
+      ] as const,
     };
 
     return this.sendEmail(emailData);

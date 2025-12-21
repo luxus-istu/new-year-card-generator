@@ -1,48 +1,75 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import type { FormData } from '@/app/types';
+import type { FormData, Template } from '@/app/types';
 
-export default function CardForm() {
+const FALLBACK_RECIPIENT_EMAIL = process.env.NEXT_PUBLIC_SMTP_DEFAULT_TO || '';
+
+type Props = {
+  currentTemplate: Template;
+};
+
+export default function CardForm({ currentTemplate }: Props) {
   const [formData, setFormData] = useState<FormData>({
     senderName: '',
     recipientName: '',
     recipientEmail: '',
-    noEmail: false
+    noEmail: false,
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
+    if (name === 'noEmail') {
+      setFormData(prev => ({
+        ...prev,
+        noEmail: checked,
+        recipientEmail: checked ? FALLBACK_RECIPIENT_EMAIL : '',
+      }));
+      return;
+    }
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // TODO: Make POST requst to server for sending card generated
-    /* Example
-    fetch('/api/send-card', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        initials, // string
-        recipient, // string
-        templateId: selectedTemplate.name, // string
-        cardImage // base64 image encoded from canvas
-        imageType // "image/jpeg" || "image/png"
-        email, // string
-        })
-      })
-      .catch((e) => // set error status for user)
-      .finally(() => // set ok status for user)
-    */
-    setFormData({
-      senderName: '',
-      recipientName: '',
-      recipientEmail: '',
-      noEmail: false
-    });
+    setIsSubmitting(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const response = await fetch("/api/send-card", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sender: formData.senderName,
+          recipient: formData.recipientName,
+          email: formData.recipientEmail,
+          templateId: currentTemplate.name,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send card');
+      }
+
+      setSuccess(true);
+      setFormData({
+        senderName: '',
+        recipientName: '',
+        recipientEmail: FALLBACK_RECIPIENT_EMAIL,
+        noEmail: false,
+      });
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -58,7 +85,6 @@ export default function CardForm() {
           required
         />
       </div>
-
       <div className="form-group">
         <label htmlFor="recipient-name">ФИО получателя:</label>
         <input
@@ -70,7 +96,6 @@ export default function CardForm() {
           required
         />
       </div>
-
       <div className="form-group">
         <label htmlFor="recipient-email">Почта получателя:</label>
         <input
@@ -83,7 +108,6 @@ export default function CardForm() {
           disabled={formData.noEmail}
         />
       </div>
-
       <div className="form-group checkbox-group">
         <label>
           <input
@@ -96,10 +120,11 @@ export default function CardForm() {
           <span>Я не знаю почту получателя</span>
         </label>
       </div>
-
-      <button type="submit" className="form-submit">
-        Отправить открытку
+      <button type="submit" className="form-submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Отправка...' : 'Отправить открытку'}
       </button>
+      {error && <p className="error-message">{error}</p>}
+      {success && <p className="success-message">Открытка успешно отправлена!</p>}
     </form>
   );
-};
+}

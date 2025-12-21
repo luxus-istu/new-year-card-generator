@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import Slider from './Slider';
 import CardForm from './CardForm';
-import type { TemplateMeta } from '@/app/types';
+import type { Template } from '@/app/types';
 
 export default function SigmaSection() {
-  const [cardImages, setCardImages] = useState<TemplateMeta[]>([]);
+  const [cardImages, setCardImages] = useState<Template[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentTemplate, setCurrentTemplate] = useState<Template>(cardImages[0]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -20,7 +21,8 @@ export default function SigmaSection() {
         return response.json();
       })
       .then((data) => {
-        setCardImages(data as TemplateMeta[]);
+        setCardImages(data as Template[]);
+        setCurrentTemplate(data[0] as Template);
       })
       .catch((error) => {
         console.error("Не удалось загрузить шаблоны:", error);
@@ -30,6 +32,10 @@ export default function SigmaSection() {
         setIsLoading(false);
       });
   }, []);
+
+  const onSlideChange = (template: Template) => {
+    setCurrentTemplate(template);
+  };
 
   return (
     <section className="sigma">
@@ -50,8 +56,8 @@ export default function SigmaSection() {
 
       {!isLoading && !error && (
         <div className="sigma_items">
-          <Slider templates={cardImages} />
-          <CardForm />
+          <Slider templates={cardImages} onSlideChange={onSlideChange} />
+          <CardForm currentTemplate={currentTemplate} />
         </div>
       )}
     </section>
