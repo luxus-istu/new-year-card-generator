@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useState, useCallback } from 'react'
 import TemplateGrid from './components/TemplateGrid'
 import CardPreview from './components/CardPreview'
-import { Template } from '../../shared/src/types'
+import { Template } from '@/app/types'
 
 export default function App() {
   const [templates, setTemplates] = useState<Template[]>([])

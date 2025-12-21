@@ -1,21 +1,27 @@
 {
-  "name": "new-year-card-generator",
+  "name": "card-generator",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend && npm install --prefix shared",
-    "build:shared": "npm run build --prefix shared",
-    "dev": "npm run build:shared && concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
-    "build": "npm run build --prefix shared && npm run build --prefix backend && npm run build --prefix frontend",
-    "start": "NODE_ENV=production node dist/server/server.js",
-    "start:dev": "NODE_ENV=development node dist/server/server.js"
-  },
-  "devDependencies": {
-    "concurrently": "9.2.1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
-    "cors": "2.8.5",
-    "express": "5.2.1",
+    "next": "16.1.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "nodemailer": "7.0.11"
+  },
+  "devDependencies": {
+    "@types/node": "20",
+    "@types/react": "19",
+    "@types/react-dom": "19",
+    "@types/nodemailer": "7.0.4",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "9",
+    "eslint-config-next": "16.1.0",
+    "typescript": "5"
   }
 }

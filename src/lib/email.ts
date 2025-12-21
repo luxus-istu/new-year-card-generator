@@ -1,4 +1,4 @@
-import { EmailService } from "./services/EmailService.js";
+import { EmailService } from "@/lib/services/EmailService";
 
 const config = {
   host: process.env.SMTP_HOST!,
@@ -8,6 +8,5 @@ const config = {
   password: process.env.SMTP_PASSWORD!,
   from: process.env.SMTP_FROM!
 };
-
 
 export const emailService = new EmailService(config);

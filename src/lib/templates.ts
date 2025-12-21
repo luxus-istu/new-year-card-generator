@@ -1,9 +1,17 @@
-import path from "path"
-import fs from "fs/promises"
-import type { Template, TemplateMeta } from '@new-year-card-generator/shared';
+import type { Template, TemplateMeta } from "@/app/types";
+import path from "path";
+import fs from "fs/promises";
 
 export async function getCardTemplates(): Promise<Template[]> {
-  const templatesDir = path.join(process.cwd(), 'templates');
+  const templatesDir = path.join(process.cwd(), 'public', 'templates');
+
+  try {
+    await fs.access(templatesDir);
+  } catch (error) {
+    console.error('Папка templates не найдена в public/templates!');
+    return [];
+  }
+
   const entries = await fs.readdir(templatesDir, { withFileTypes: true });
   const templates: Template[] = [];
 
@@ -31,7 +39,7 @@ export async function getCardTemplates(): Promise<Template[]> {
         recipientColor: meta.recipientColor
       });
     } catch (err) {
-      console.error(`Ошибка в папке ${folderName}:`, err);
+      console.error(`Ошибка при обработке папки ${folderName}:`, err);
     }
   }
   return templates;
