@@ -1,5 +1,4 @@
-import React from 'react'
-import { Template } from '../../../shared/src/types'
+import type { Template } from '@/app/types'
 
 type Props = {
   templates: Template[]
@@ -7,7 +6,7 @@ type Props = {
   selectedTemplate: Template | null
 }
 
-const TemplateGrid: React.FC<Props> = ({ templates, onSelect, selectedTemplate }) => {
+export default function TemplateGrid({ templates, onSelect, selectedTemplate }: Props) {
   return (
     <div className="template-grid">
       {templates.map((template) => (
@@ -23,5 +22,3 @@ const TemplateGrid: React.FC<Props> = ({ templates, onSelect, selectedTemplate }
     </div>
   )
 }
-
-export default TemplateGrid

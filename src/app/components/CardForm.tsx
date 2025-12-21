@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import type { FormData } from '@new-year-card-generator/shared';
+import type { FormData } from '@/app/types';
 
 export default function CardForm() {
   const [formData, setFormData] = useState<FormData>({

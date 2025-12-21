@@ -1,11 +1,11 @@
 import React, { useState, useRef, useCallback } from 'react';
-import type { TemplateMeta, IndicatorPosition } from '@new-year-card-generator/shared';
+import type { TemplateMeta, IndicatorPosition } from '@/app/types';
 
 type ImagesProps = {
   templates: TemplateMeta[]
 }
 
-const Slider: React.FC<ImagesProps> = ({ templates }) => {
+export default function Slider({ templates }: ImagesProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const slidesContainerRef = useRef<HTMLDivElement>(null);
@@ -101,7 +101,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
           onClick={() => goToSlide(currentIndex - 1)}
           disabled={isAnimating || templates.length <= 1}
         >
-          <img src="src/client/img/left.png" alt="Previous" />
+          <img src="/img/left.png" alt="Previous" />
         </button>
 
         <div className="slider">
@@ -132,7 +132,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex - 3)}
             >
               <div className="indicator-img-container">
-                <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
+                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
 
@@ -141,7 +141,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex - 2)}
             >
               <div className="indicator-img-container">
-                <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
+                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
 
@@ -150,7 +150,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex - 1)}
             >
               <div className="indicator-img-container">
-                <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
+                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
 
@@ -160,7 +160,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex)}
             >
               <div className="indicator-img-container active-indicator">
-                <img src="src/client/img/Star.png" alt="" className="indicator-img active-indicator-img" />
+                <img src="/img/Star.png" alt="" className="indicator-img active-indicator-img" />
               </div>
             </div>
 
@@ -169,7 +169,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex + 1)}
             >
               <div className="indicator-img-container">
-                <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
+                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
 
@@ -178,7 +178,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex + 2)}
             >
               <div className="indicator-img-container">
-                <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
+                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
 
@@ -187,7 +187,7 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
               onClick={() => goToSlide(currentIndex + 3)}
             >
               <div className="indicator-img-container">
-                <img src="src/client/img/Ellipse.png" alt="" className="indicator-img" />
+                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
               </div>
             </div>
           </div>
@@ -199,11 +199,9 @@ const Slider: React.FC<ImagesProps> = ({ templates }) => {
           onClick={() => goToSlide(currentIndex + 1)}
           disabled={isAnimating || templates.length <= 1}
         >
-          <img src="src/client/img/right.png" alt="Next" />
+          <img src="/img/right.png" alt="Next" />
         </button>
       </div>
     </div>
   );
 };
-
-export default Slider;

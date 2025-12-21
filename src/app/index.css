@@ -1,6 +1,6 @@
 @font-face {
   font-family: "KuraleRegular";
-  src: url('fonts/Kurale-Regular.ttf')
+  src: url('/fonts/KuraleRegular.ttf')
 }
 
 .error-message {

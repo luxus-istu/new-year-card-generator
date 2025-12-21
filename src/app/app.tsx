@@ -1,7 +1,9 @@
-import React, { useState, useCallback } from 'react'
-import TemplateGrid from './components/TemplateGrid'
-import CardPreview from './components/CardPreview'
-import { Template } from '../../shared/src/types'
+"use client";
+
+import { useState, useCallback, useEffect } from 'react'
+import { Template } from '@/app/types'
+import Header from './components/Header';
+import SigmaSection from './components/SigmaSection';
 
 export default function App() {
   const [templates, setTemplates] = useState<Template[]>([])
@@ -13,7 +15,7 @@ export default function App() {
   const [status, setStatus] = useState('')
 
   // Загрузка шаблонов
-  React.useEffect(() => {
+  useEffect(() => {
     fetchTemplates()
   }, [])
 
@@ -157,5 +159,3 @@ export default function App() {
     </>
   );
 };
-
-export default App;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Slider from './Slider';
 import CardForm from './CardForm';
-import type { TemplateMeta } from '@new-year-card-generator/shared';
+import type { TemplateMeta } from '@/app/types';
 
 export default function SigmaSection() {
   const [cardImages, setCardImages] = useState<TemplateMeta[]>([]);
@@ -34,9 +34,9 @@ export default function SigmaSection() {
   return (
     <section className="sigma">
       <div className="sigma_title">
-        <img src="src/client/img/list.png" alt="list" className="list" />
+        <img src="/img/list.png" alt="list" className="list" />
         <h1 className="sigma_name">Волшебство создаётся здесь</h1>
-        <img src="src/client/img/list1.png" alt="list" className="list1" />
+        <img src="/img/list1.png" alt="list" className="list1" />
       </div>
       <h1 className="open_title">Выберите открытку:</h1>
 

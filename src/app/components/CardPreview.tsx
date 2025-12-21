@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'
-import type { Template } from '@new-year-card-generator/shared'
+import { useEffect, useRef } from 'react'
+import type { Template } from '@/app/types'
 
 type Props = {
   template: Template
@@ -7,7 +7,7 @@ type Props = {
   recipient: string
 }
 
-const CardPreview: React.FC<Props> = ({ template, initials, recipient }) => {
+export default function CardPreview({ template, initials, recipient }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -54,5 +54,3 @@ const CardPreview: React.FC<Props> = ({ template, initials, recipient }) => {
     </div>
   )
 }
-
-export default CardPreview
