@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Template } from '../../../shared/src/types'
+import type { Template } from '@/app/types'
 
 interface Props {
   template: Template

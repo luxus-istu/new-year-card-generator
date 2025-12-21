@@ -1,9 +1,18 @@
-import path from "path"
-import fs from "fs/promises"
-import type { Template, TemplateMeta } from '@new-year-card-generator/shared';
+import { NextResponse } from 'next/server';
+import path from 'path';
+import fs from 'fs/promises';
+import type { Template, TemplateMeta } from '@/app/types';
 
-export async function getCardTemplates(): Promise<Template[]> {
-  const templatesDir = path.join(process.cwd(), 'templates');
+async function getCardTemplates(): Promise<Template[]> {
+  const templatesDir = path.join(process.cwd(), 'public', 'templates');
+
+  try {
+    await fs.access(templatesDir);
+  } catch (error) {
+    console.error('Папка templates не найдена в public/templates!');
+    return [];
+  }
+
   const entries = await fs.readdir(templatesDir, { withFileTypes: true });
   const templates: Template[] = [];
 
@@ -31,8 +40,21 @@ export async function getCardTemplates(): Promise<Template[]> {
         recipientColor: meta.recipientColor
       });
     } catch (err) {
-      console.error(`Ошибка в папке ${folderName}:`, err);
+      console.error(`Ошибка при обработке папки ${folderName}:`, err);
     }
   }
   return templates;
+}
+
+export async function GET() {
+  try {
+    const templates = await getCardTemplates();
+    return NextResponse.json(templates);
+  } catch (error) {
+    console.error('API templates error:', error);
+    return new NextResponse(
+      JSON.stringify({ error: 'Failed to load templates' }),
+      { status: 500 }
+    );
+  }
 }
