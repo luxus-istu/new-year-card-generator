@@ -64,12 +64,9 @@ export class EmailService {
           <div style="text-align: center; margin: 30px 0;">
             <img src="cid:greeting-card" alt="Поздравительная открытка"
                  style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
-            <p style="margin-top: 20px; font-size: 16px; color: #666;">
-              Шаблон: ${options.templateName}
-            </p>
           </div>
           <p style="font-size: 18px; color: #555; text-align: center; line-height: 1.6;">
-            Пусть этот день наполнит вашу жизнь радостью, теплом и счастьем! ✨
+            ${options.message || 'Пусть этот день наполнит вашу жизнь радостью, теплом и счастьем! ✨'}
           </p>
           <hr style="border: none; height: 1px; background: #eee; margin: 30px 0;">
           <p style="text-align: center; color: #888; font-size: 14px;">
@@ -79,10 +76,10 @@ export class EmailService {
       `,
       attachments: [
         {
-          filename: 'greeting-card.png',   // имя файла, которое увидит получатель
+          filename: 'greeting-card.webp',   // имя файла, которое увидит получатель
           content: options.cardImage,      // Buffer напрямую
           cid: 'greeting-card',            // уникальный cid для встраивания
-          contentType: 'image/png',        // явно указываем тип
+          contentType: 'image/webp',        // явно указываем тип
           contentDisposition: 'inline' as const, // важно для встроенных изображений
         }
       ] as const,

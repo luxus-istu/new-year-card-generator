@@ -18,102 +18,113 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
+/* Базовые стили для мобильных */
 .header {
   background: #D1132F;
   display: flex;
-  justify-content: space-between;
-  height: 960px;
+  flex-direction: column;
+  padding: 20px 16px;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
 .title {
   display: flex;
   align-items: center;
-  margin-top: 26px;
-  margin-left: 90px;
+  margin-bottom: 40px;
 }
 
 .header_img {
-  height: 78px;
-  width: 78px;
+  height: 60px;
+  width: 60px;
 }
 
 .header_name {
-
-  font-size: 48px;
+  font-size: 32px;
   color: #FDFFF6;
-  margin-left: 14px;
+  margin-left: 12px;
+  line-height: 1.2;
 }
 
 .main_text {
-
-  font-size: 92px;
+  font-size: 42px;
   color: #FDFFF6;
-  margin-top: 92px;
-  margin-left: 90px;
-  width: 1000px;
+  margin-bottom: 40px;
+  width: 100%;
+  line-height: 1.2;
+  max-width: 100%;
 }
 
 .right {
-  position: absolute;
-  right: 0;
-  background: linear-gradient(to left, rgba(8, 0, 0, 0.4), transparent);
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.right img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .not_img {
-  margin-top: 50px;
-  margin-left: 90px;
-  width: 350px;
-  height: 110px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  max-width: 350px;
+  margin: 30px auto;
 }
 
 .switch {
-  width: 110px;
-  height: 110px;
+  width: 80px;
+  height: 80px;
 }
 
 .header_snow_big {
-  width: 68px;
-  height: 68px;
+  width: 50px;
+  height: 50px;
 }
 
 .header_snow_medium {
-  width: 48px;
-  height: 48px;
+  width: 35px;
+  height: 35px;
 }
 
 .header_snow_small {
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
 }
 
 .sigma {
-  margin: 0 auto;
-  margin-top: 38px;
+  padding: 40px 16px;
 }
 
 .sigma_name {
   color: #9A5656;
-  font-size: 48px;
-
-  margin-left: 52px;
-  margin-right: 52px;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .sigma_title {
-  width: 1024px;
   display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
 }
 
 .slider_img {
-  width: 540px;
-  height: 540px;
+  width: 100%;
+  height: auto;
+  max-width: 400px;
   display: block;
   margin: 0 auto;
 }
@@ -123,9 +134,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 796px;
-  margin-left: 213px;
-  gap: 0;
+  width: 100%;
+  gap: 10px;
+  padding: 0 10px;
 }
 
 .slider {
@@ -133,8 +144,8 @@
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  max-width: 540px;
-  margin: 0;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .slides {
@@ -157,10 +168,10 @@
 }
 
 .slider-btn {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border: none;
-  font-size: 32px;
+  font-size: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -170,8 +181,8 @@
   z-index: 10;
   background: none;
   padding: 0;
-  margin: 0 10px;
-  margin-bottom: 40px;
+  margin: 0 5px;
+  margin-bottom: 20px;
 }
 
 .slider-btn img {
@@ -203,11 +214,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   padding: 20px 0;
   background: rgba(255, 255, 255, 0.95);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   user-select: none;
+  flex-wrap: wrap;
 }
 
 .indicator-item {
@@ -227,30 +239,31 @@
 }
 
 .indicator-item.center .indicator-img-container {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   opacity: 1;
 }
 
 .indicator-item.near-left .indicator-img-container,
 .indicator-item.near-right .indicator-img-container {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   opacity: 0.45;
 }
 
 .indicator-item.far-left .indicator-img-container,
 .indicator-item.far-right .indicator-img-container {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   opacity: 0.25;
 }
 
 .indicator-item.extra-far-left .indicator-img-container,
 .indicator-item.extra-far-right .indicator-img-container {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   opacity: 0.12;
+  display: none;
 }
 
 .indicator-img {
@@ -307,12 +320,13 @@
 }
 
 .open {
+  width: 100%;
+  padding: 0 16px;
   margin-top: 40px;
-  width: 796px;
 }
 
 .open_title {
-  font-size: 32px;
+  font-size: 24px;
   color: #9A5656;
   text-align: center;
   margin: 0 auto;
@@ -328,20 +342,21 @@ button {
 
 .sigma_items {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
 }
 
 .card-form {
-  width: 560px;
-  height: 540px;
-  padding: 30px;
+  width: 100%;
+  max-width: 560px;
+  padding: 24px;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(209, 19, 47, 0.15);
   font-family: KuraleRegular, sans-serif;
   box-sizing: border-box;
-  margin-top: 42px;
-  margin-right: 213px;
+  margin: 0 auto;
 }
 
 .form-group {
@@ -351,14 +366,14 @@ button {
 .form-group label {
   display: block;
   margin-bottom: 6px;
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
   font-weight: normal;
 }
 
 .form-group input[type="text"],
 .form-group input[type="email"] {
-  width: 95%;
+  width: 100%;
   padding: 10px 12px;
   font-size: 16px;
   border: 2px solid #ddd;
@@ -385,7 +400,7 @@ button {
   gap: 10px;
   cursor: pointer;
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   color: #555;
   font-weight: normal;
 }
@@ -399,7 +414,7 @@ button {
 
 .form-submit {
   width: 100%;
-  font-size: 20px;
+  font-size: 18px;
   font-family: KuraleRegular, sans-serif;
   color: #FDFFF6;
   background: #D1132F;
@@ -460,4 +475,480 @@ button {
   font-size: 16px;
   color: white;
   font-weight: bold;
+}
+
+/* Планшеты (768px и выше) */
+@media (min-width: 768px) {
+  .header {
+    padding: 30px 40px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 80vh;
+  }
+
+  .title {
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  .header_img {
+    height: 70px;
+    width: 70px;
+  }
+
+  .header_name {
+    font-size: 40px;
+  }
+
+  .main_text {
+    font-size: 60px;
+    max-width: 600px;
+    margin-top: 80px;
+    margin-left: 0;
+  }
+
+  .right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+    margin-top: 0;
+  }
+
+  .right img {
+    height: 100%;
+    width: auto;
+    max-width: none;
+  }
+
+  .sigma {
+    padding: 60px 40px;
+  }
+
+  .sigma_name {
+    font-size: 40px;
+  }
+
+  .slider_img {
+    max-width: 500px;
+  }
+
+  .slider-container {
+    padding: 0 40px;
+  }
+
+  .slider {
+    max-width: 500px;
+  }
+
+  .sigma_items {
+    flex-direction: row;
+    justify-content: center;
+    gap: 60px;
+  }
+
+  .card-form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0;
+  }
+
+  .open {
+    padding: 0 40px;
+  }
+}
+
+/* Десктоп (1024px и выше) */
+@media (min-width: 1024px) {
+  .header {
+    padding: 40px 90px;
+    height: 960px;
+  }
+
+  .header_img {
+    height: 78px;
+    width: 78px;
+  }
+
+  .header_name {
+    font-size: 48px;
+  }
+
+  .main_text {
+    font-size: 92px;
+    max-width: 1000px;
+    margin-top: 92px;
+    margin-left: 90px;
+  }
+
+  .not_img {
+    margin-top: 50px;
+    margin-left: 90px;
+    width: 350px;
+    margin-bottom: 0;
+  }
+
+  .switch {
+    width: 110px;
+    height: 110px;
+  }
+
+  .header_snow_big {
+    width: 68px;
+    height: 68px;
+  }
+
+  .header_snow_medium {
+    width: 48px;
+    height: 48px;
+  }
+
+  .header_snow_small {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sigma {
+    padding: 60px 0;
+  }
+
+  .sigma_name {
+    font-size: 48px;
+    margin-left: 52px;
+    margin-right: 52px;
+    text-align: left;
+  }
+
+  .sigma_title {
+    width: 1024px;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 auto;
+  }
+
+  .slider_img {
+    width: 540px;
+    height: 540px;
+    max-width: none;
+  }
+
+  .slider-container {
+    width: 796px;
+    margin-left: 213px;
+    padding: 0;
+  }
+
+  .slider {
+    max-width: 540px;
+  }
+
+  .slider-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 32px;
+    margin: 0 10px;
+    margin-bottom: 40px;
+  }
+
+  .indicators {
+    gap: 24px;
+  }
+
+  .indicator-item.center .indicator-img-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .indicator-item.near-left .indicator-img-container,
+  .indicator-item.near-right .indicator-img-container {
+    width: 26px;
+    height: 26px;
+  }
+
+  .indicator-item.far-left .indicator-img-container,
+  .indicator-item.far-right .indicator-img-container {
+    width: 20px;
+    height: 20px;
+  }
+
+  .indicator-item.extra-far-left .indicator-img-container,
+  .indicator-item.extra-far-right .indicator-img-container {
+    width: 16px;
+    height: 16px;
+    display: flex;
+  }
+
+  .open {
+    width: 796px;
+    padding: 0;
+    margin: 40px auto 0;
+  }
+
+  .open_title {
+    font-size: 32px;
+  }
+
+  .card-form {
+    width: 560px;
+    height: 540px;
+    padding: 30px;
+    margin-top: 42px;
+    margin-right: 213px;
+  }
+
+  .form-group label {
+    font-size: 18px;
+  }
+
+  .form-group.checkbox-group label {
+    font-size: 18px;
+  }
+
+  .form-submit {
+    font-size: 20px;
+  }
+}
+
+/* Большие экраны (1200px и выше) */
+@media (min-width: 1200px) {
+  .header {
+    justify-content: space-between;
+  }
+
+  .sigma_title {
+    width: 1200px;
+  }
+
+  .open {
+    width: 900px;
+  }
+}
+
+/* Мобильная версия слайдера (до 767px) */
+@media (max-width: 767px) {
+  .slider-container {
+    width: 100%;
+    padding: 0 5px;
+    gap: 5px;
+    align-items: center;
+    position: relative;
+    min-height: auto;
+  }
+
+  /* Уменьшаем и центрируем кнопки навигации */
+  .slider-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 0;
+    padding: 0;
+    background: rgba(209, 19, 47, 0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: static;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  .slider-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  /* Центрируем кнопки вертикально относительно слайдера */
+  .slider-container {
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Основной слайдер */
+  .slider {
+    flex: 1;
+    max-width: calc(100% - 100px);
+    /* Оставляем место под кнопки */
+    margin: 0 auto;
+  }
+
+  /* Уменьшаем индикаторы */
+  .indicators {
+    gap: 6px;
+    padding: 12px 0 8px;
+    background: transparent;
+    border-top: none;
+    margin-top: 5px;
+  }
+
+  /* Уменьшаем все кружочки индикаторов */
+  .indicator-item.center .indicator-img-container {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #D1132F;
+    border-radius: 50%;
+    padding: 1px;
+    background: white;
+    box-shadow: 0 1px 4px rgba(209, 19, 47, 0.2);
+  }
+
+  .indicator-item.near-left .indicator-img-container,
+  .indicator-item.near-right .indicator-img-container {
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    border-radius: 50%;
+  }
+
+  .indicator-item.far-left .indicator-img-container,
+  .indicator-item.far-right .indicator-img-container,
+  .indicator-item.extra-far-left .indicator-img-container,
+  .indicator-item.extra-far-right .indicator-img-container {
+    display: none;
+    /* Скрываем дальние индикаторы на мобилках */
+  }
+
+  /* Уменьшаем картинки внутри индикаторов */
+  .indicator-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+  }
+
+  /* Делаем иконки индикаторов еще меньше */
+  .indicator-item.center .indicator-img {
+    padding: 4px;
+  }
+
+  .indicator-item.near-left .indicator-img,
+  .indicator-item.near-right .indicator-img {
+    padding: 2px;
+  }
+
+  /* Улучшаем видимость текущего слайда */
+  .slider_img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* Убираем лишние отступы */
+  .slide {
+    padding: 0;
+  }
+
+  /* Анимации и ховеры для индикаторов */
+  .indicator-item:not(.center):not(.hidden) .indicator-img-container:hover {
+    transform: scale(1.05);
+  }
+
+  .indicator-item.center.animate {
+    animation: none;
+    /* Убираем анимацию на мобилках для производительности */
+  }
+
+  /* Центрируем всю секцию слайдера */
+  .sigma_title {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Улучшаем свайп-область */
+  .slider {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Убираем ненужные элементы на мобилках */
+  .slide-counter,
+  .swipe-hint {
+    display: none;
+  }
+}
+
+/* Для очень маленьких экранов (до 360px) */
+@media (max-width: 360px) {
+  .slider-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .slider-btn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .indicator-item.center .indicator-img-container {
+    width: 32px;
+    height: 32px;
+  }
+
+  .indicator-item.near-left .indicator-img-container,
+  .indicator-item.near-right .indicator-img-container {
+    width: 20px;
+    height: 20px;
+  }
+
+  .indicators {
+    gap: 4px;
+    padding: 10px 0 6px;
+  }
+
+  .slider {
+    max-width: calc(100% - 80px);
+    /* Еще меньше места под кнопки */
+  }
+}
+
+/* Для средних мобилок (375px-414px) */
+@media (min-width: 375px) and (max-width: 414px) {
+  .slider {
+    max-width: calc(100% - 90px);
+  }
+
+  .slider-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .slider-btn img {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Улучшаем доступность для фокуса */
+.slider-btn:focus-visible {
+  outline: 2px solid #D1132F;
+  outline-offset: 2px;
+  background: rgba(209, 19, 47, 0.15);
+}
+
+/* Плавная прокрутка для слайдера */
+.slides {
+  scroll-behavior: smooth;
+}
+
+/* Убираем лишние отступы у всего слайдера */
+.sigma {
+  overflow: hidden;
+}
+
+/* Если нужно, можно добавить отступ снизу для индикаторов */
+@media (max-width: 767px) {
+  .sigma_title {
+    padding-bottom: 10px;
+  }
 }

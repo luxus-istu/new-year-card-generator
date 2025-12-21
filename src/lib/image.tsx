@@ -7,7 +7,7 @@ import { readFile } from "fs/promises";
 export async function generateImage(data: FormData, template: Template): Promise<ImageResponse> {
   const backgroundPath = path.join(process.cwd(), 'public', template.url.replace(/^\//, ''));
   const notePath = path.join(process.cwd(), 'public', 'note.png');
-  const fontPath = path.join(process.cwd(), 'public', 'Kurale-Regular.ttf'); // ← замени на свой шрифт
+  const fontPath = path.join(process.cwd(), 'public', 'Kurale-Regular.ttf');
 
   const [backgroundBuffer, noteBuffer, fontBuffer] = await Promise.all([
     readFile(backgroundPath),
@@ -15,7 +15,7 @@ export async function generateImage(data: FormData, template: Template): Promise
     readFile(fontPath),
   ]);
 
-  // Оригинальные размеры фона
+  // Размеры фона
   const backgroundMetadata = await sharp(backgroundBuffer).metadata();
   const width = backgroundMetadata.width!;
   const height = backgroundMetadata.height!;
@@ -23,16 +23,15 @@ export async function generateImage(data: FormData, template: Template): Promise
   const backgroundSrc = `data:image/png;base64,${backgroundBuffer.toString('base64')}`;
   const noteSrc = `data:image/png;base64,${noteBuffer.toString('base64')}`;
 
-  // Адаптивный размер записки (~38% от ширины)
+  // Размер записки (~38% ширины фона)
   const noteBaseWidth = Math.round(width * 0.38);
   const noteMetadata = await sharp(noteBuffer).metadata();
   const noteAspectRatio = noteMetadata.height! / noteMetadata.width!;
   const noteWidth = noteBaseWidth;
   const noteHeight = Math.round(noteWidth * noteAspectRatio);
 
-  // Случайный поворот (±8°)
+  // Случайный поворот
   const randomRotation = (Math.random() * 16 - 8).toFixed(2);
-
   const edgePadding = Math.round(width * 0.015);
 
   const noteStyle: React.CSSProperties = {
@@ -47,6 +46,14 @@ export async function generateImage(data: FormData, template: Template): Promise
   const recipientName = data.recipientName.trim().slice(0, 50) || 'Другу';
   const recipientEmail = data.recipientEmail.trim().slice(0, 100);
 
+  // === ОДИНАКОВЫЙ АДАПТИВНЫЙ ШРИФТ ДЛЯ ВСЕГО ТЕКСТА ===
+  const uniformFontSize = Math.round(noteWidth * 0.07); // чуть меньше, чтобы длинный текст влезал
+  const lineThickness = Math.round(noteWidth * 0.007);
+  const lineWidthPercent = '65%';
+
+  // Адаптивные отступы
+  const paddingTopBottom = `${Math.round(noteHeight * 0.18)}px ${Math.round(noteWidth * 0.12)}px ${Math.round(noteHeight * 0.15)}px ${Math.round(noteWidth * 0.09)}px`;
+
   return new ImageResponse(
     (
       <div
@@ -60,7 +67,6 @@ export async function generateImage(data: FormData, template: Template): Promise
           position: 'relative',
         }}
       >
-        {/* Записка */}
         <img
           src={noteSrc}
           width={noteWidth}
@@ -68,39 +74,75 @@ export async function generateImage(data: FormData, template: Template): Promise
           style={noteStyle}
         />
 
-        {/* Текст — ещё немного опущены вторая и третья строки */}
         <div
           style={{
             ...noteStyle,
             width: noteWidth,
             height: noteHeight,
-            padding: '18% 12% 12% 12%',
+            padding: paddingTopBottom,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
-            fontSize: `${Math.round(width * 0.02)}px`,
+            alignItems: 'flex-start',
             fontFamily: '"Kurale-Regular"',
-            color: '#502929',
-            textShadow: '1px 1px 3px rgba(255,255,255,0.7)',
-            pointerEvents: 'none',
+            fontSize: uniformFontSize,
+            fontWeight: 'normal',
+            color: '#4a2c1b',
+            textShadow: '1px 1px 3px rgba(255,255,255,0.8)',
+            pointerEvents: 'none' as const,
+            lineHeight: '1.45', // чуть больше, чтобы текст "дышал"
+            textAlign: 'left' as const,
           }}
         >
-          {/* Отправитель — ближе к верху */}
-          <span style={{ marginTop: '6%' }}>{senderName}</span>
+          {/* От кого */}
+          <span style={{ marginBottom: '12px' }}>От кого</span>
+          <span style={{
+            marginBottom: '35px',
+            maxWidth: '95%',
+            wordBreak: 'break-word' as const
+          }}>
+            {senderName}
+          </span>
+          <div style={{
+            height: lineThickness,
+            backgroundColor: '#6b4a3a',
+            width: lineWidthPercent,
+            marginBottom: '60px' // ← БОЛЬШЕ ОТСТУП ПОСЛЕ ЛИНИИ
+          }} />
 
-          {/* Получатель — опущен чуть ниже предыдущего варианта */}
-          <span style={{ marginTop: '10%' }}>{recipientName}</span>
+          {/* Кому */}
+          <span style={{ marginBottom: '12px' }}>Кому</span>
+          <span style={{
+            marginBottom: '35px',
+            maxWidth: '95%',
+            wordBreak: 'break-word' as const
+          }}>
+            {recipientName}
+          </span>
+          <div style={{
+            height: lineThickness,
+            backgroundColor: '#6b4a3a',
+            width: lineWidthPercent,
+            marginBottom: '60px' // ← БОЛЬШЕ ОТСТУП
+          }} />
 
-          {/* Email — тоже опущен ещё немного */}
+          {/* Почта */}
+          <span style={{ marginBottom: '12px' }}>Почта</span>
           <span
             style={{
-              fontSize: `${Math.round(width * 0.025)}px`,
-              wordBreak: 'break-all',
-              marginTop: '14%',
+              maxWidth: '95%',
+              wordBreak: 'break-all' as const,
+              marginBottom: '35px',
+              fontSize: `${Math.round(noteWidth * 0.06)}`
             }}
           >
             {recipientEmail}
           </span>
+          <div style={{
+            height: lineThickness,
+            backgroundColor: '#6b4a3a',
+            width: lineWidthPercent
+          }} />
         </div>
       </div>
     ),

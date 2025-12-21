@@ -3,13 +3,14 @@ export interface FormData {
   recipientName: string;
   recipientEmail: string;
   noEmail: boolean;
+  message: string;
 }
 
-export type IndicatorPosition = 
-  | 'extra-far-left' 
-  | 'far-left' 
-  | 'near-left' 
-  | 'center' 
-  | 'near-right' 
-  | 'far-right' 
+export type IndicatorPosition =
+  | 'extra-far-left'
+  | 'far-left'
+  | 'near-left'
+  | 'center'
+  | 'near-right'
+  | 'far-right'
   | 'extra-far-right';

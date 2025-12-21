@@ -13,6 +13,7 @@ export default function CardForm({ currentTemplate }: Props) {
     recipientName: '',
     recipientEmail: '',
     noEmail: false,
+    message: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,6 +51,7 @@ export default function CardForm({ currentTemplate }: Props) {
           recipient: formData.recipientName,
           email: formData.recipientEmail,
           templateId: currentTemplate.name,
+          message: formData.message,
         }),
       });
 
@@ -62,8 +64,9 @@ export default function CardForm({ currentTemplate }: Props) {
       setFormData({
         senderName: '',
         recipientName: '',
-        recipientEmail: FALLBACK_RECIPIENT_EMAIL,
+        recipientEmail: '',
         noEmail: false,
+        message: '',
       });
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
@@ -75,7 +78,7 @@ export default function CardForm({ currentTemplate }: Props) {
   return (
     <form className="card-form" onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="sender-name">Ваше ФИО:</label>
+        <label htmlFor="sender-name">Ваше Имя:</label>
         <input
           type="text"
           id="sender-name"
@@ -86,7 +89,7 @@ export default function CardForm({ currentTemplate }: Props) {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="recipient-name">ФИО получателя:</label>
+        <label htmlFor="recipient-name">Имя получателя:</label>
         <input
           type="text"
           id="recipient-name"
@@ -106,6 +109,16 @@ export default function CardForm({ currentTemplate }: Props) {
           onChange={handleChange}
           required={!formData.noEmail}
           disabled={formData.noEmail}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="sender-message">Пожелания (необязательное поле)</label>
+        <input
+          type="text"
+          id="sender-message"
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
         />
       </div>
       <div className="form-group checkbox-group">

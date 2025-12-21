@@ -7,7 +7,7 @@ import { generateImage } from '@/lib/image';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { sender, recipient, email, templateId } = body;
+    const { sender, recipient, email, templateId, message } = body;
     const templates = await getCardTemplates();
     const template = templates.find(t => t.name === templateId);
     if (!template) {
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       recipientName: recipient,
       recipientEmail: email,
       noEmail: false,
+      message: message
     };
     const cardImageBuffer = await generateImage(imageData, template);
     const bytes = await cardImageBuffer.arrayBuffer();
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
       recipient,
       templateName,
       cardImage,
+      message: imageData.message
     });
     if (result.success) {
       console.log('✅ Email отправлен:', result.message);
