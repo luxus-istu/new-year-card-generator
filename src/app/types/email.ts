@@ -25,7 +25,6 @@ export interface SendEmailResult {
 export interface SendMailOptions {
   to: string;
   recipient: string;
-  templateName: string;
   cardImage: Buffer;
   message?: string;
 }

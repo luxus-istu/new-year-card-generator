@@ -45,6 +45,14 @@
   box-shadow: 0 0 0 3px rgba(209, 19, 47, 0.15);
 }
 
+.card-form .form-group input[type="text"]:disabled,
+.card-form .form-group input[type="email"]:disabled,
+.card-form .form-group textarea:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .card-form .form-group textarea {
   min-height: 110px;
   resize: vertical;
@@ -113,6 +121,17 @@
 
 .card-form .checkbox-group label:hover span::before {
   border-color: #D1132F;
+}
+
+.card-form .checkbox-group input[type="checkbox"]:disabled+span::before {
+  background-color: #f5f5f5;
+  border-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.card-form .checkbox-group input[type="checkbox"]:disabled:checked+span::before {
+  background-color: #ff8a9e;
+  border-color: #ff8a9e;
 }
 
 /* Капча */

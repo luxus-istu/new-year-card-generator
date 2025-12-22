@@ -1,26 +1,13 @@
 'use server';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getCardTemplates } from "@/lib/templates";
 import { emailService } from "@/lib/email";
-import type { FormData } from "@/app/types"
-import { generateImage } from '@/lib/image';
-import Sharp from "sharp";
-
-async function convertBufferToWebP(
-  inputBuffer: Buffer,
-  options?: Sharp.WebpOptions
-): Promise<Buffer> {
-  return await Sharp(inputBuffer)
-    .webp(options)
-    .toBuffer();
-}
-
+import { convertBufferToWebP } from "@/lib/utils/imageConverter";
 
 export async function POST(req: NextRequest) {
   try {
-    const { sender, recipient, email, templateId, message, captchaToken } = await req.json();
-    if (!captchaToken) {
+    const { recipient, email, message, token, image } = await req.json();
+    if (!token) {
       return Response.json(
         { error: 'Отсутствует токен капчи' },
         { status: 400 }
@@ -42,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     const params = new URLSearchParams();
     params.append('secret', SERVER_KEY);
-    params.append('token', captchaToken);
+    params.append('token', token);
 
     if (clientIp) {
       params.append('ip', clientIp);
@@ -66,30 +53,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const templates = await getCardTemplates();
-    const template = templates.find(t => t.name === templateId);
-    if (!template) {
-      throw new Error('Шаблон не найден');
-    }
-    const templateName = template.name;
-
-    const imageData: FormData = {
-      senderName: sender,
-      recipientName: recipient,
-      recipientEmail: email,
-      noEmail: false,
-      message: message
-    };
-    const cardImageBuffer = await generateImage(imageData, template);
-    const bytes = await cardImageBuffer.arrayBuffer();
-    const image = await convertBufferToWebP(Buffer.from(bytes));
+    const imageBuffer = await convertBufferToWebP(Buffer.from(image));
 
     const result = await emailService.sendGreetingCard({
       to: email,
       recipient,
-      templateName,
-      cardImage: image,
-      message: imageData.message
+      cardImage: imageBuffer,
+      message: message
     });
     if (result.success) {
       console.log('✅ Email отправлен:', result.message);
