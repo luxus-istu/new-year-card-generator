@@ -2,6 +2,7 @@
 import App from '@/app/app';
 import './index.css'
 import { Kurale } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 
 const kurale = Kurale({
   weight: '400',
@@ -20,6 +21,7 @@ export default function Home() {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className={kurale.className}>
+        <Analytics />
         <App />
       </body>
     </html>
