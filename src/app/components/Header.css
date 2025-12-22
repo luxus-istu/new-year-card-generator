@@ -1,0 +1,265 @@
+.header {
+  background: #D1132F;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Критично для мобильных */
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* ==================== МОБИЛЬНАЯ ВЕРСИЯ (< 768px) ==================== */
+@media (max-width: 767px) {
+  .header {
+    background-image: url("/img/header_img.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    padding-top: env(safe-area-inset-top);
+    /* Только для чёлки */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Оверлей для читаемости */
+  .header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.42);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Тень для текста */
+  .header .header_name,
+  .header .main_text {
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Основной контейнер — колонка с контролем расположения */
+  .header>.left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Верх + центр + низ */
+    align-items: center;
+    /* Всё по центру по горизонтали */
+    padding: 0 16px;
+    padding-top: max(20px, env(safe-area-inset-top));
+    /* Логотип чуть ниже верха */
+    padding-bottom: 40px;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    /* Текст по центру */
+  }
+
+  /* Верхняя часть: логотип + название — прижато к верху */
+  .header .title {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 40px;
+  }
+
+  /* Главный текст — центрирован и занимает максимум ширины */
+  .header .main_text {
+    font-size: 42px;
+    line-height: 1.15;
+    margin: 0 auto 40px;
+    max-width: 90%;
+    /* Чтобы не прилипал к краям */
+    width: 100%;
+  }
+
+  /* Нижняя часть: снежинки и Switch — прижато к низу */
+  .header .not_img {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+}
+
+/* ==================== ОБЩИЕ СТИЛИ ==================== */
+.header .left {
+  flex-grow: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.header .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* На мобильных тоже по центру */
+  gap: 12px;
+}
+
+.header .header_img {
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.header .header_name {
+  font-size: 32px;
+  color: #FDFFF6;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.header .main_text {
+  font-size: 42px;
+  color: #FDFFF6;
+  font-weight: 700;
+}
+
+.header .not_img {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .switch {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.header .header_snow_big {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.header .header_snow_medium {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.header .header_snow_small {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.header .right {
+  display: none;
+}
+
+/* ==================== ПЛАНШЕТЫ И ДЕСКТОП (≥768px) — ОРИГИНАЛ ==================== */
+@media (min-width: 768px) {
+  .header {
+    padding: 30px 40px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 80vh;
+    background-image: none;
+  }
+
+  .header::before {
+    display: none;
+  }
+
+  .header>.left {
+    padding: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header .title {
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+
+  .header .header_img {
+    height: 70px;
+    width: 70px;
+  }
+
+  .header .header_name {
+    font-size: 40px;
+    text-shadow: none;
+  }
+
+  .header .main_text {
+    font-size: 60px;
+    max-width: 600px;
+    margin-top: 80px;
+    text-align: left;
+    text-shadow: none;
+  }
+
+  .header .right {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+  }
+
+  .header .right img {
+    height: 100%;
+    width: auto;
+    max-width: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header {
+    padding: 40px 90px;
+    min-height: 960px;
+  }
+
+  .header .header_img {
+    height: 78px;
+    width: 78px;
+  }
+
+  .header .header_name {
+    font-size: 48px;
+  }
+
+  .header .main_text {
+    font-size: 92px;
+    max-width: 1000px;
+    margin-top: 92px;
+    margin-left: 90px;
+  }
+
+  .header .not_img {
+    margin-top: 50px;
+    margin-left: 90px;
+    width: 350px;
+    margin-bottom: 0;
+  }
+
+  .header .switch {
+    width: 110px;
+    height: 110px;
+  }
+
+  .header .header_snow_big {
+    width: 68px;
+    height: 68px;
+  }
+
+  .header .header_snow_medium {
+    width: 48px;
+    height: 48px;
+  }
+
+  .header .header_snow_small {
+    width: 38px;
+    height: 38px;
+  }
+}

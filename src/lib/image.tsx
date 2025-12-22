@@ -1,31 +1,33 @@
 import type { Template, FormData } from "@/app/types";
 import { ImageResponse } from 'next/og';
-import sharp from "sharp";
-import path from "path";
-import { readFile } from "fs/promises";
+import Sharp from "sharp";
+import { join } from "path";
+import { file } from "bun"
+
+const notePath = join(process.cwd(), 'public', 'note.png');
+const fontPath = join(process.cwd(), 'public', 'Kurale-Regular.ttf');
 
 export async function generateImage(data: FormData, template: Template): Promise<ImageResponse> {
-  const backgroundPath = path.join(process.cwd(), 'public', template.url.replace(/^\//, ''));
-  const notePath = path.join(process.cwd(), 'public', 'note.png');
-  const fontPath = path.join(process.cwd(), 'public', 'Kurale-Regular.ttf');
+  const backgroundPath = join(process.cwd(), 'public', template.url.replace(/^\//, ''));
 
   const [backgroundBuffer, noteBuffer, fontBuffer] = await Promise.all([
-    readFile(backgroundPath),
-    readFile(notePath),
-    readFile(fontPath),
+    file(backgroundPath).bytes(),
+    file(notePath).bytes(),
+    file(fontPath).arrayBuffer(),
   ]);
 
+
   // Размеры фона
-  const backgroundMetadata = await sharp(backgroundBuffer).metadata();
+  const backgroundMetadata = await Sharp(backgroundBuffer).metadata();
   const width = backgroundMetadata.width!;
   const height = backgroundMetadata.height!;
 
-  const backgroundSrc = `data:image/png;base64,${backgroundBuffer.toString('base64')}`;
-  const noteSrc = `data:image/png;base64,${noteBuffer.toString('base64')}`;
+  const backgroundSrc = `data:image/png;base64,${backgroundBuffer.toBase64()}`;
+  const noteSrc = `data:image/png;base64,${noteBuffer.toBase64()}`;
 
   // Размер записки (~38% ширины фона)
   const noteBaseWidth = Math.round(width * 0.38);
-  const noteMetadata = await sharp(noteBuffer).metadata();
+  const noteMetadata = await Sharp(noteBuffer).metadata();
   const noteAspectRatio = noteMetadata.height! / noteMetadata.width!;
   const noteWidth = noteBaseWidth;
   const noteHeight = Math.round(noteWidth * noteAspectRatio);

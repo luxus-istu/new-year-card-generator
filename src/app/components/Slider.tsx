@@ -1,5 +1,6 @@
-import { useState, useRef, useCallback } from 'react';
-import type { IndicatorPosition, Template } from '@/app/types';
+import { useState, useRef, useEffect } from 'react';
+import type { Template } from '@/app/types';
+import "./Slider.css";
 
 type ImagesProps = {
   templates: Template[]
@@ -10,203 +11,101 @@ interface SliderProps extends ImagesProps {
 }
 
 export default function Slider({ templates, onSlideChange }: SliderProps) {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const slidesContainerRef = useRef<HTMLDivElement>(null);
-  const centerIndicatorRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const prevIndexRef = useRef<number>(0);
 
-  const totalSlides: number = templates.length;
+  const total = templates.length;
 
-  const goToSlide = useCallback((index: number): void => {
-    if (isAnimating || templates.length === 0) return;
-
-    // Зацикливание
-    let newIndex = index;
-    if (index < 0) {
-      newIndex = totalSlides - 1;
-    } else if (index >= totalSlides) {
-      newIndex = 0;
-    }
-
-    setIsAnimating(true);
+  const goToPrevious = () => {
+    prevIndexRef.current = currentIndex;
+    const newIndex = currentIndex === 0 ? total - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
-    onSlideChange(templates[newIndex])
+  };
 
-    // Скроллим
-    if (slidesContainerRef.current) {
-      slidesContainerRef.current.scrollTo({
-        left: slidesContainerRef.current.clientWidth * newIndex,
-        behavior: 'smooth'
+  const goToNext = () => {
+    prevIndexRef.current = currentIndex;
+    const newIndex = currentIndex === total - 1 ? 0 : currentIndex + 1;
+    setCurrentIndex(newIndex);
+  };
+
+  useEffect(() => {
+    const wasWrapping =
+      (prevIndexRef.current === total - 1 && currentIndex === 0) ||
+      (prevIndexRef.current === 0 && currentIndex === total - 1);
+
+    if (wasWrapping) {
+      setIsTransitioning(false);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsTransitioning(true);
+        });
       });
     }
 
-    // Анимация звезды
-    if (centerIndicatorRef.current) {
-      const centerEl = centerIndicatorRef.current;
-      centerEl.classList.remove('animate');
-      void centerEl.offsetWidth; // Принудительный reflow
-      centerEl.classList.add('animate');
-    }
+    onSlideChange(templates[currentIndex]!);
+  }, [currentIndex, templates, onSlideChange]);
 
-    // Снимаем флаг анимации
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 500);
-  }, [isAnimating, totalSlides, templates.length]);
-
-  // Показываем/скрываем индикаторы
-  const shouldShowIndicator = (position: IndicatorPosition): boolean => {
-    if (templates.length <= 1) return false;
-
-    switch (position) {
-      case 'extra-far-left':
-        return currentIndex >= 3;
-      case 'far-left':
-        return currentIndex >= 2;
-      case 'near-left':
-        return currentIndex >= 1;
-      case 'center':
-        return true;
-      case 'near-right':
-        return currentIndex <= totalSlides - 2;
-      case 'far-right':
-        return currentIndex <= totalSlides - 3;
-      case 'extra-far-right':
-        return currentIndex <= totalSlides - 4;
-      default:
-        return false;
-    }
-  };
-
-  // Если нет изображений, показываем заглушку
-  if (templates.length === 0) {
-    return (
-      <div className="open">
-        <div className="slider-container">
-          <div className="slider">
-            <div className="slides" style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <div className="slide">
-                <p style={{ color: '#9A5656', fontSize: '24px', fontFamily: 'KuraleRegular' }}>
-                  Нет доступных открыток
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (total === 0) {
+    return <div>Нет шаблонов для отображения</div>;
   }
 
+  const getVisibleDotIndices = (): number[] => {
+    if (total === 1) return [0];
+    if (total === 2) return [0, 1];
+
+    const prev = currentIndex === 0 ? total - 1 : currentIndex - 1;
+    const next = currentIndex === total - 1 ? 0 : currentIndex + 1;
+
+    return [prev, currentIndex, next];
+  };
+
+  const visibleIndices = getVisibleDotIndices();
+
   return (
-    <div className="open">
-      <div className="slider-container">
-        <button
-          className="slider-btn prev-btn"
-          aria-label="Предыдущий слайд"
-          onClick={() => goToSlide(currentIndex - 1)}
-          disabled={isAnimating || templates.length <= 1}
+    <div className="slider">
+      <div className="slider__viewport">
+        <div
+          className="slider__track"
+          style={{
+            transform: `translateX(-${currentIndex * 100}%)`,
+            transition: isTransitioning ? 'transform 0.6s ease-in-out' : 'none',
+          }}
         >
-          <img src="/img/left.png" alt="Previous" />
+          {templates.map((template, index) => (
+            <div key={index} className="slider__slide">
+              <img
+                src={template.url}
+                alt={template.name}
+                className="slider__image"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="slider__controls">
+        <button className="slider__btn slider__btn--prev" onClick={goToPrevious}>
+          ❮
         </button>
 
-        <div className="slider">
-          <div className="slides" ref={slidesContainerRef}>
-            {templates.map((image, index) => (
-              <div
+        <div className="slider__dots-container">
+          <div className="slider__dots-track">
+            {visibleIndices.map((index) => (
+              <span
                 key={index}
-                className={`slide ${index === currentIndex ? 'active' : ''}`}
-              >
-                <img
-                  src={image.url}
-                  className="slider_img"
-                  alt={`Открытка: ${image.name}`}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    // TODO: request placeholder image with origal image size
-                    target.src = `https://placehold.co/600`;
-                    console.error(`Не удалось загрузить изображение: ${image.name}`)
-                  }}
-                />
-              </div>
+                className={`slider__dot ${index === currentIndex ? 'slider__dot--active' : ''}`}
+              // Убрано onClick — точки больше не кликабельны
+              />
             ))}
           </div>
-
-          <div className="indicators">
-            <div
-              className={`indicator-item extra-far-left ${shouldShowIndicator('extra-far-left') ? '' : 'hidden'}`}
-              onClick={() => goToSlide(currentIndex - 3)}
-            >
-              <div className="indicator-img-container">
-                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
-              </div>
-            </div>
-
-            <div
-              className={`indicator-item far-left ${shouldShowIndicator('far-left') ? '' : 'hidden'}`}
-              onClick={() => goToSlide(currentIndex - 2)}
-            >
-              <div className="indicator-img-container">
-                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
-              </div>
-            </div>
-
-            <div
-              className={`indicator-item near-left ${shouldShowIndicator('near-left') ? '' : 'hidden'}`}
-              onClick={() => goToSlide(currentIndex - 1)}
-            >
-              <div className="indicator-img-container">
-                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
-              </div>
-            </div>
-
-            <div
-              ref={centerIndicatorRef}
-              className="indicator-item center"
-              onClick={() => goToSlide(currentIndex)}
-            >
-              <div className="indicator-img-container active-indicator">
-                <img src="/img/Star.png" alt="" className="indicator-img active-indicator-img" />
-              </div>
-            </div>
-
-            <div
-              className={`indicator-item near-right ${shouldShowIndicator('near-right') ? '' : 'hidden'}`}
-              onClick={() => goToSlide(currentIndex + 1)}
-            >
-              <div className="indicator-img-container">
-                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
-              </div>
-            </div>
-
-            <div
-              className={`indicator-item far-right ${shouldShowIndicator('far-right') ? '' : 'hidden'}`}
-              onClick={() => goToSlide(currentIndex + 2)}
-            >
-              <div className="indicator-img-container">
-                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
-              </div>
-            </div>
-
-            <div
-              className={`indicator-item extra-far-right ${shouldShowIndicator('extra-far-right') ? '' : 'hidden'}`}
-              onClick={() => goToSlide(currentIndex + 3)}
-            >
-              <div className="indicator-img-container">
-                <img src="/img/Ellipse.png" alt="" className="indicator-img" />
-              </div>
-            </div>
-          </div>
+          <div className="slider__dots-indicator" />
         </div>
 
-        <button
-          className="slider-btn next-btn"
-          aria-label="Следующий слайд"
-          onClick={() => goToSlide(currentIndex + 1)}
-          disabled={isAnimating || templates.length <= 1}
-        >
-          <img src="/img/right.png" alt="Next" />
+        <button className="slider__btn slider__btn--next" onClick={goToNext}>
+          ❯
         </button>
       </div>
     </div>
   );
-};
+}

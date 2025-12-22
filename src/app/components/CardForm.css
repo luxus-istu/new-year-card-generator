@@ -1,0 +1,204 @@
+/* card-form.css — отдельные стили только для формы открытки */
+
+.card-form-container {
+  padding: 0 16px;
+  margin: 40px auto 60px;
+  max-width: 600px;
+}
+
+.card-form {
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(209, 19, 47, 0.15);
+}
+
+.card-form .form-group {
+  margin-bottom: 18px;
+}
+
+.card-form .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.card-form .form-group input[type="text"],
+.card-form .form-group input[type="email"],
+.card-form .form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 2px solid #dddddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-form .form-group input[type="text"]:focus,
+.card-form .form-group input[type="email"]:focus,
+.card-form .form-group textarea:focus {
+  outline: none;
+  border-color: #D1132F;
+  box-shadow: 0 0 0 3px rgba(209, 19, 47, 0.15);
+}
+
+.card-form .form-group textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Чекбокс "Я не знаю почту получателя" */
+.card-form .checkbox-group {
+  margin-bottom: 24px;
+}
+
+.card-form .checkbox-group label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 16px;
+  color: #555555;
+  user-select: none;
+}
+
+.card-form .checkbox-group input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.card-form .checkbox-group span {
+  position: relative;
+  padding-left: 34px;
+  line-height: 1.5;
+}
+
+.card-form .checkbox-group span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #cccccc;
+  border-radius: 6px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.card-form .checkbox-group span::after {
+  content: '✓';
+  position: absolute;
+  left: 6px;
+  top: 1px;
+  font-size: 18px;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.card-form .checkbox-group input[type="checkbox"]:checked+span::before {
+  background: #D1132F;
+  border-color: #D1132F;
+}
+
+.card-form .checkbox-group input[type="checkbox"]:checked+span::after {
+  opacity: 1;
+}
+
+.card-form .checkbox-group label:hover span::before {
+  border-color: #D1132F;
+}
+
+/* Капча */
+.card-form .captcha-group {
+  margin: 28px 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Кнопка отправки */
+.card-form .form-submit {
+  width: 100%;
+  height: 52px;
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #FDFFF6;
+  background: #D1132F;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.card-form .form-submit:hover:not(:disabled) {
+  background: #b00f28;
+  transform: translateY(-1px);
+}
+
+.card-form .form-submit:active {
+  transform: translateY(0);
+}
+
+.card-form .form-submit:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Сообщения об ошибке и успехе */
+.card-form .error-message {
+  margin-top: 16px;
+  padding: 12px 16px;
+  font-size: 15px;
+  text-align: center;
+  color: #d32f2f;
+  background-color: #ffcdd2;
+  border: 1px solid #d32f2f;
+  border-radius: 8px;
+}
+
+.card-form .success-message {
+  margin-top: 16px;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: #2e7d32;
+  background-color: #c8e6c9;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+}
+
+/* Адаптивность */
+@media (min-width: 768px) {
+  .card-form-container {
+    padding: 0 40px;
+  }
+
+  .card-form {
+    padding: 36px;
+  }
+
+  .card-form .form-group label {
+    font-size: 18px;
+  }
+
+  .card-form .form-submit {
+    height: 56px;
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-form {
+    padding: 40px;
+    max-width: 560px;
+  }
+}

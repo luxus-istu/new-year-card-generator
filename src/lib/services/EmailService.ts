@@ -1,4 +1,4 @@
-import { Transporter, createTransport } from 'nodemailer';
+import { type Transporter, createTransport } from 'nodemailer';
 import type { EmailData, EmailServiceConfig, SendEmailResult, SendMailOptions } from '@/app/types';
 
 export class EmailService {

@@ -1,7 +1,10 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { FormData, Template } from '@/app/types';
+import { SmartCaptcha } from "@yandex/smart-captcha";
+import "./CardForm.css";
 
 const FALLBACK_RECIPIENT_EMAIL = process.env.NEXT_PUBLIC_SMTP_DEFAULT_TO || '';
+const CAPTCHA_SITEKEY = 'ysc1_5h2q8jDd9mUlSsFV2v9OlkUjtqHgnQbzgc5Nj8qa0e91af6c';
 
 type Props = {
   currentTemplate: Template;
@@ -16,28 +19,48 @@ export default function CardForm({ currentTemplate }: Props) {
     message: '',
   });
 
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+
     if (name === 'noEmail') {
+      const isChecked = checked;
       setFormData(prev => ({
         ...prev,
-        noEmail: checked,
-        recipientEmail: checked ? FALLBACK_RECIPIENT_EMAIL : '',
+        noEmail: isChecked,
+        recipientEmail: isChecked ? FALLBACK_RECIPIENT_EMAIL : prev.recipientEmail,
       }));
-      return;
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
     }
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleCaptchaSuccess = (token: string) => {
+    setCaptchaToken(token);
+  };
+
+  const handleCaptchaExpire = () => {
+    setCaptchaToken(null);
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      setError('Пожалуйста, пройдите проверку "Я не робот"');
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
     setSuccess(false);
@@ -47,17 +70,18 @@ export default function CardForm({ currentTemplate }: Props) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sender: formData.senderName,
-          recipient: formData.recipientName,
+          sender: formData.senderName.trim(),
+          recipient: formData.recipientName.trim(),
           email: formData.recipientEmail,
           templateId: currentTemplate.name,
-          message: formData.message,
+          message: formData.message.trim(),
+          captchaToken, // ← передаём токен на бэкенд
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send card');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Не удалось отправить открытку');
       }
 
       setSuccess(true);
@@ -68,17 +92,21 @@ export default function CardForm({ currentTemplate }: Props) {
         noEmail: false,
         message: '',
       });
+      setCaptchaToken(null); // сбрасываем капчу после успешной отправки
     } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred');
+      setError(err.message || 'Произошла неожиданная ошибка');
+      setCaptchaToken(null); // при ошибке тоже лучше сбросить токен
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const isSubmitDisabled = isSubmitting || !captchaToken;
+
   return (
-    <form className="card-form" onSubmit={handleSubmit}>
+    <form className="card-form" onSubmit={handleSubmit} noValidate>
       <div className="form-group">
-        <label htmlFor="sender-name">Ваше Имя:</label>
+        <label htmlFor="sender-name">Ваше имя:</label>
         <input
           type="text"
           id="sender-name"
@@ -86,8 +114,10 @@ export default function CardForm({ currentTemplate }: Props) {
           value={formData.senderName}
           onChange={handleChange}
           required
+          disabled={isSubmitting}
         />
       </div>
+
       <div className="form-group">
         <label htmlFor="recipient-name">Имя получателя:</label>
         <input
@@ -97,8 +127,10 @@ export default function CardForm({ currentTemplate }: Props) {
           value={formData.recipientName}
           onChange={handleChange}
           required
+          disabled={isSubmitting}
         />
       </div>
+
       <div className="form-group">
         <label htmlFor="recipient-email">Почта получателя:</label>
         <input
@@ -108,36 +140,61 @@ export default function CardForm({ currentTemplate }: Props) {
           value={formData.recipientEmail}
           onChange={handleChange}
           required={!formData.noEmail}
-          disabled={formData.noEmail}
+          disabled={formData.noEmail || isSubmitting}
+          placeholder={formData.noEmail ? 'Будет отправлено на резервный адрес' : ''}
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="sender-message">Пожелания (необязательное поле)</label>
-        <input
-          type="text"
-          id="sender-message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-        />
-      </div>
+
       <div className="form-group checkbox-group">
-        <label>
+        <label className="checkbox-label">
           <input
             type="checkbox"
             id="no-email"
             name="noEmail"
             checked={formData.noEmail}
             onChange={handleChange}
+            disabled={isSubmitting}
           />
           <span>Я не знаю почту получателя</span>
         </label>
       </div>
-      <button type="submit" className="form-submit" disabled={isSubmitting}>
+
+      <div className="form-group">
+        <label htmlFor="sender-message">Пожелания (необязательно):</label>
+        <textarea
+          id="sender-message"
+          name="message"
+          rows={4}
+          value={formData.message}
+          onChange={handleChange}
+          disabled={isSubmitting}
+          placeholder="Напишите своё пожелание..."
+        />
+      </div>
+
+      <div className="form-group captcha-group">
+        <SmartCaptcha
+          sitekey={CAPTCHA_SITEKEY}
+          language="ru"
+          onSuccess={handleCaptchaSuccess}
+          onChallengeHidden={handleCaptchaExpire}
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="form-submit"
+        disabled={isSubmitDisabled}
+      >
         {isSubmitting ? 'Отправка...' : 'Отправить открытку'}
       </button>
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">Открытка успешно отправлена!</p>}
+
+      {error && <p className="error-message" role="alert">{error}</p>}
+      {success && (
+        <p className="success-message" role="status">
+          Открытка успешно отправлена!
+        </p>
+      )}
     </form>
   );
 }

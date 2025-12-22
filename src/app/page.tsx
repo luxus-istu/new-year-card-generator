@@ -5,7 +5,7 @@ import { Kurale } from "next/font/google"
 
 const kurale = Kurale({
   weight: '400',
-  subsets: ['cyrillic', 'cyrillic-ext']
+  subsets: ['cyrillic'] as const
 });
 
 export default function Home() {
@@ -16,7 +16,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>New Year Card Generator</title>
         <meta name='description' content='New Year Card Generator' />
-        <link rel='icon' href='/favicon.ico' />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className={kurale.className}>
         <App />

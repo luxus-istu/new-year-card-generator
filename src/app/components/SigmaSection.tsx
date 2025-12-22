@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import Slider from './Slider';
 import CardForm from './CardForm';
 import type { Template } from '@/app/types';
+import './SigmaSection.css'; // Обычный импорт без module
 
 export default function SigmaSection() {
   const [cardImages, setCardImages] = useState<Template[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentTemplate, setCurrentTemplate] = useState<Template>(cardImages[0]);
+  const [currentTemplate, setCurrentTemplate] = useState<Template | undefined>(undefined);
 
   useEffect(() => {
     setIsLoading(true);
@@ -21,12 +22,13 @@ export default function SigmaSection() {
         return response.json();
       })
       .then((data) => {
-        setCardImages(data as Template[]);
-        setCurrentTemplate(data[0] as Template);
+        const templates = data as Template[];
+        setCardImages(templates);
+        setCurrentTemplate(templates[0]);
       })
       .catch((error) => {
-        console.error("Не удалось загрузить шаблоны:", error);
-        setError("Не удалось загрузить шаблоны. Пожалуйста, попробуйте позже.");
+        console.error('Не удалось загрузить шаблоны:', error);
+        setError('Не удалось загрузить шаблоны. Пожалуйста, попробуйте позже.');
       })
       .finally(() => {
         setIsLoading(false);
@@ -39,27 +41,29 @@ export default function SigmaSection() {
 
   return (
     <section className="sigma">
+      {/* Заголовок */}
       <div className="sigma_title">
-        <img src="/img/list.png" alt="list" className="list" />
+        <img src="/img/list.png" alt="Декоративный элемент" className="list" />
         <h1 className="sigma_name">Волшебство создаётся здесь</h1>
-        <img src="/img/list1.png" alt="list" className="list1" />
+        <img src="/img/list1.png" alt="Декоративный элемент" className="list1" />
       </div>
-      <h1 className="open_title">Выберите открытку:</h1>
 
-      {isLoading && <div className="loading-message">Загрузка...</div>}
+      <h2 className="open_title">Выберите открытку:</h2>
 
-      {error && (
-        <div className="error-message" style={{ color: 'red', textAlign: 'center', padding: '10px' }}>
-          {error}
-        </div>
-      )}
+      {/* Сообщения */}
+      {isLoading && <div className="loading_message">Загрузка...</div>}
 
-      {!isLoading && !error && (
+      {error && <div className="error_message">{error}</div>}
+
+      {/* Основной контент */}
+      {!isLoading && !error && cardImages.length > 0 && (
         <div className="sigma_items">
-          <Slider templates={cardImages} onSlideChange={onSlideChange} />
-          <CardForm currentTemplate={currentTemplate} />
+          <div className="sigma_items_inner">
+            <Slider templates={cardImages} onSlideChange={onSlideChange} />
+            {currentTemplate && <CardForm currentTemplate={currentTemplate} />}
+          </div>
         </div>
       )}
     </section>
   );
-};
+}
