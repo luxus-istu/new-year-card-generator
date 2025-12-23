@@ -123,8 +123,7 @@ export default function CardForm({ currentTemplate }: Props) {
     }
   };
 
-  const handleClosePreview = (signal: AbortController) => {
-    signal.abort();
+  const handleClosePreview = () => {
     setIsPreviewModalOpen(false);
   };
 

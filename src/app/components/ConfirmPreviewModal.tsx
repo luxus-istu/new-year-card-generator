@@ -3,7 +3,7 @@ import './ConfirmPreviewModal.css';
 
 interface ConfirmPreviewModalProps {
   isOpen: boolean;
-  onClose: (signal: AbortController) => void;
+  onClose: () => void;
   onConfirm: (image: string) => Promise<void>;
   formData: {
     senderName: string;
@@ -28,7 +28,7 @@ export default function ConfirmPreviewModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const [image, setImage] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
-  const previewController = new AbortController();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -39,6 +39,11 @@ export default function ConfirmPreviewModal({
         contentRef.current.scrollTop = 0;
       }
     } else {
+      // Отменяем текущий запрос при закрытии
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
       if (imageUrl) {
         URL.revokeObjectURL(imageUrl);
         setImageUrl(null);
@@ -49,6 +54,10 @@ export default function ConfirmPreviewModal({
     }
 
     return () => {
+      // Отменяем запрос при размонтировании
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       if (imageUrl) {
         URL.revokeObjectURL(imageUrl);
       }
@@ -59,7 +68,7 @@ export default function ConfirmPreviewModal({
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose(previewController);
+        onClose();
       }
     };
 
@@ -75,6 +84,14 @@ export default function ConfirmPreviewModal({
   const loadPreview = async () => {
     if (!isOpen) return;
 
+    // Отменяем предыдущий запрос, если он существует
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Создаем новый AbortController
+    abortControllerRef.current = new AbortController();
+
     setIsLoading(true);
     setError(null);
 
@@ -85,7 +102,6 @@ export default function ConfirmPreviewModal({
 
     try {
       const response = await fetch("/api/preview-card", {
-        signal: previewController.signal,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,6 +114,7 @@ export default function ConfirmPreviewModal({
           templateId: formData.templateId,
           message: formData.message.trim(),
         }),
+        signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
@@ -118,9 +135,17 @@ export default function ConfirmPreviewModal({
       setImageUrl(url);
 
     } catch (err: any) {
+      // Игнорируем ошибки отмены запроса
+      if (err.name === 'AbortError') {
+        console.log('Запрос предпросмотра отменен');
+        return;
+      }
       setError(err.message || 'Ошибка при загрузке предпросмотра');
       console.error('Preview error:', err);
     } finally {
+      if (abortControllerRef.current) {
+        abortControllerRef.current = null;
+      }
       setIsLoading(false);
     }
   };
@@ -134,7 +159,7 @@ export default function ConfirmPreviewModal({
     setIsSending(true);
     try {
       await onConfirm(image);
-      onClose(previewController);
+      onClose();
     } catch (err) {
       console.error('Send error in modal:', err);
       setError('Ошибка при отправке открытки');
@@ -145,7 +170,7 @@ export default function ConfirmPreviewModal({
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node) && !isSending) {
-      onClose(previewController);
+      onClose();
     }
   };
 
@@ -156,7 +181,7 @@ export default function ConfirmPreviewModal({
       <div ref={modalRef} className="confirm-modal">
         <button
           className="confirm-modal-close"
-          onClick={() => onClose(previewController)}
+          onClick={onClose}
           disabled={isSending}
           aria-label="Закрыть"
         >
@@ -215,7 +240,7 @@ export default function ConfirmPreviewModal({
 
           <div className="buttons-container">
             <button
-              onClick={() => onClose(previewController)}
+              onClick={onClose}
               disabled={isSending}
               className="cancel-button"
             >
