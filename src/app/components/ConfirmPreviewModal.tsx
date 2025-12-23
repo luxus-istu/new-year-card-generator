@@ -3,7 +3,7 @@ import './ConfirmPreviewModal.css';
 
 interface ConfirmPreviewModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (signal: AbortController) => void;
   onConfirm: (image: string) => Promise<void>;
   formData: {
     senderName: string;
@@ -28,6 +28,7 @@ export default function ConfirmPreviewModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const [image, setImage] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
+  const previewController = new AbortController();
 
   useEffect(() => {
     if (isOpen) {
@@ -58,7 +59,7 @@ export default function ConfirmPreviewModal({
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onClose(previewController);
       }
     };
 
@@ -84,6 +85,7 @@ export default function ConfirmPreviewModal({
 
     try {
       const response = await fetch("/api/preview-card", {
+        signal: previewController.signal,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +134,7 @@ export default function ConfirmPreviewModal({
     setIsSending(true);
     try {
       await onConfirm(image);
-      onClose();
+      onClose(previewController);
     } catch (err) {
       console.error('Send error in modal:', err);
       setError('Ошибка при отправке открытки');
@@ -143,7 +145,7 @@ export default function ConfirmPreviewModal({
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node) && !isSending) {
-      onClose();
+      onClose(previewController);
     }
   };
 
@@ -154,7 +156,7 @@ export default function ConfirmPreviewModal({
       <div ref={modalRef} className="confirm-modal">
         <button
           className="confirm-modal-close"
-          onClick={onClose}
+          onClick={() => onClose(previewController)}
           disabled={isSending}
           aria-label="Закрыть"
         >
@@ -213,7 +215,7 @@ export default function ConfirmPreviewModal({
 
           <div className="buttons-container">
             <button
-              onClick={onClose}
+              onClick={() => onClose(previewController)}
               disabled={isSending}
               className="cancel-button"
             >
